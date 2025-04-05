@@ -47,16 +47,12 @@ MonoBehaviour:
   Icon: {fileID: 0}
   builtId: 
   Components:
-  - rid: 2595387413948530938
-  - rid: 2595387413948530950
+  - rid: 2595387422742937676
   references:
     version: 2
     RefIds:
-    - rid: 2595387413948530938
-      type: {class: TagAbilitiesHolder, ns: Game, asm: Assembly-CSharp}
+    - rid: 2595387422742937676
+      type: {class: TagEnemyGenerationInfo, ns: Game, asm: Assembly-CSharp}
       data:
-        All: []
-    - rid: 2595387413948530950
-      type: {class: TagViewsHolder, ns: Game, asm: Assembly-CSharp}
-      data:
-        All: []
+        EntityLinks:
+        - Id: /IgnoreTag_Enemies/Enemy0

@@ -25,16 +25,27 @@ namespace Game
         public HoleState LeftHoleInfo;
         public HoleState RightHoleInfo;
 
+        public bool Fighting;
+        public EntityState EnemyState;
+
         public EntityState PlayerState;
     }
     public class Main : MonoBehaviour
     {
+        [Header("Main")]
+        public GameState State;
+        public int GradeCost = 5;
+
         public Interactor Interactor;
 
         [Header("Hole")]
-        public GameObject HoleSelectionParent;
+        public GameObject HoleSelectionSceneParent;
         public HoleView LeftHole;
         public HoleView RightHole;
+        [Header("Fight")]
+        public GameObject FightingSceneParent;
+        public EntityView PlayerFightView;
+        public EntityView EnemyView;
 
         private Dictionary<int, GenerationInfo> generationInfosMap = new();
 
@@ -45,6 +56,7 @@ namespace Game
             CMS.Init();
 
             G.State = new GameState();
+            State = G.State;
             G.Main = this;
 
             LeftHole.OnPressed += OnSelectHole;
@@ -77,8 +89,20 @@ namespace Game
         private IEnumerator UnloadScene()
         {
             G.State.SelectingHole = false;
-            HoleSelectionParent.SetActive(false);
+            G.State.LeftHoleInfo = null;
+            G.State.RightHoleInfo = null;
+            HoleSelectionSceneParent.SetActive(false);
+
+            G.State.Fighting = false;
+            G.State.EnemyState = null;
+            FightingSceneParent.SetActive(false);
             yield break;
+        }
+        private IEnumerator EnterNextHole()
+        {
+            G.State.Level++;
+            G.State.Grade = Mathf.Min(G.State.Level / GradeCost, generationInfosMap.Count - 1);
+            yield return EnterHoleSelectionScene();
         }
         private IEnumerator EnterHoleSelectionScene()
         {
@@ -88,12 +112,13 @@ namespace Game
             {
                 var holeState = new HoleState();
 
-                var chancesInfo = generationInfosMap[G.State.Grade].HoleInfo.Get<TagHoleGenerationChances>();
-                bool shouldSetAbility = UnityEngine.Random.Range(0, 101) < chancesInfo.HoleAbilityChance;
+                var holeInfo = GetCurrentGenInfo().HoleInfo.Get<TagHoleGenerationInfo>();
+                var r = UnityEngine.Random.Range(0, 101);
+                bool shouldSetAbility = r != 0 && r <= holeInfo.HoleAbilityChance;
 
                 if (shouldSetAbility)
                 {
-                    var abilityIds = generationInfosMap[G.State.Grade].HoleInfo.Get<TagAbilitiesHolder>().All.Select(x => x.Id).ToList();
+                    var abilityIds = holeInfo.AbilityLinks.Select(x => x.Id).ToList();
                     abilityIds.Shuffle();
                     var randomAbilityId = abilityIds[0];
                     holeState.Ability = CMS.Get<CMSEntity>(randomAbilityId);
@@ -112,7 +137,7 @@ namespace Game
             }
 
             G.State.SelectingHole = true;
-            HoleSelectionParent.SetActive(true);
+            HoleSelectionSceneParent.SetActive(true);
 
             yield break;
         }
@@ -132,11 +157,11 @@ namespace Game
                 abilityState.SetModel(holeState.Ability);
 
                 var player = G.State.PlayerState;
+                var currentAbilities = G.State.PlayerState.Abilities;
 
                 if (player.AbilitiesCount < player.MaxAbilitiesCount)//has place for new ability
                 {
                     int freeSlotId = -1;
-                    var currentAbilities = G.State.PlayerState.Abilities;
                     for (int i = 0; i < currentAbilities.Length; i++)
                     {
                         if (currentAbilities[i] != null) continue;
@@ -147,22 +172,71 @@ namespace Game
 
                     yield return G.HUD.AbilitySelectionPanel.ShowAbilityMoveToSlot(abilityState, player, freeSlotId);
 
-                    G.State.PlayerState.Abilities[freeSlotId] = abilityState;
+                    currentAbilities[freeSlotId] = abilityState;
                 }
                 else
                 {
-
                     yield return G.HUD.AbilitySelectionPanel.SelectAbilitySlot(abilityState, player);
 
                     var selectedSlotId = G.HUD.AbilitySelectionPanel.SelectedNewAbilitySlotId;
-                    G.State.PlayerState.Abilities[selectedSlotId] = abilityState;
+                    currentAbilities[selectedSlotId] = abilityState;
                 }
             }
 
-            //move to fight or next hole
+            var holeInfo = GetCurrentGenInfo().HoleInfo.Get<TagHoleGenerationInfo>();
+            var r = UnityEngine.Random.Range(0, 101);
+            bool isEnemyExists = r != 0 && r <= holeInfo.EnemyExistentChance;
+
+            if (isEnemyExists)
+            {
+                yield return EnterFightScene();
+            }
+            else
+            {
+                yield return EnterNextHole();
+            }
+        }
+
+        private IEnumerator EnterFightScene()
+        {
+            yield return UnloadScene();
+
+            var enemyInfo = GetCurrentGenInfo().EnemyInfo.Get<TagEnemyGenerationInfo>();
+            var entities = enemyInfo.EntityLinks;
+            var targetEntityLink = entities[UnityEngine.Random.Range(0, entities.Count)];
+
+            PlayerFightView.SetState(G.State.PlayerState);
+
+            G.State.EnemyState = new();
+            G.State.EnemyState.SetModel(CMS.Get<CMSEntity>(targetEntityLink.Id));
+            EnemyView.SetState(G.State.EnemyState);
+
+            G.State.Fighting = true;
+            FightingSceneParent.SetActive(true);
+
+            yield return BeginFightCycle();
+        }
+        private IEnumerator BeginFightCycle()
+        {
+            /*
+             * как собственно и раньше
+             * 
+             * вызываем ивент начала цикла
+             * вызываем ивент конца цикла игрока
+             * вызываем ивент конца цикла врага
+             * 
+             * враг по сути выбирает 1 из всех абилок и использует ее
+             * 
+             * проверку на то, стоит ли использовать способность врагу
+             * можно сделать через "фильтры", которые будут принимать PropertyLink<bool>
+             * 
+             * тогда можно будет быстро прописывать это после создания способности
+             */
+
             yield break;
         }
 
+        private GenerationInfo GetCurrentGenInfo() => generationInfosMap[G.State.Grade];
         private void LoadGenerationInfo()
         {
             generationInfosMap.Clear();
@@ -184,7 +258,7 @@ namespace Game
                 if (enemyInfo != null)
                     generationInfo.EnemyInfo = enemyInfo.AsEntity();
 
-                if (holeInfo == null && enemyInfo == null)
+                if (holeInfo == null || enemyInfo == null)
                 {
                     Debug.Log($"No infos on grade {grade}. Stopping loading");
                     break;
@@ -193,8 +267,6 @@ namespace Game
                 generationInfosMap.Add(grade, generationInfo);
                 grade++;
             }
-
-            Debug.Log($"Loaded generation grades: {generationInfosMap.Count}");
         }
     }
 }

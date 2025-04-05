@@ -116,6 +116,19 @@ public class CMSEntity
 
     public List<EntityComponentDefinition> components = new List<EntityComponentDefinition>() { new TagAnything() };
 
+    public T Define<T>(T component) where T : EntityComponentDefinition, new()
+    {
+        var t = Get<T>();
+        if(t != null)
+        {
+            Debug.Log($"Alredy has component with this type {typeof(T)} {id}");
+            return t;
+        }
+
+        components.Add(component);
+        return component;
+    }
+
     public T Define<T>() where T : EntityComponentDefinition, new()
     {
         var t = Get<T>();

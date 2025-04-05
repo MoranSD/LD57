@@ -29,7 +29,6 @@ namespace Game
                 slots[i].OnClicked += OnClickOnSlot;
             }
         }
-
         private void OnDestroy()
         {
             newAbilitySlot.OnClicked -= OnClickOnSlot;
@@ -40,7 +39,6 @@ namespace Game
 
         public IEnumerator ShowAbilityMoveToSlot(AbilityState abilityState, EntityState playerState, int slotId)
         {
-            Debug.Log("movement");
             panel.SetActive(true);
             PrepareEnvironment(abilityState, playerState);
 
@@ -51,10 +49,8 @@ namespace Game
             yield return ShowAbilityMoveToSlot(slotId);
             panel.SetActive(false);
         }
-
         public IEnumerator SelectAbilitySlot(AbilityState abilityState, EntityState playerState)
         {
-            Debug.Log("selection");
             panel.SetActive(true);
             PrepareEnvironment(abilityState, playerState);
 
@@ -78,7 +74,6 @@ namespace Game
             slots[slotId].SetAbility(newAbilitySlot.State, true);
             newAbilitySlot.gameObject.SetActive(false);
         }
-
         private void PrepareEnvironment(AbilityState abilityState, EntityState playerState)
         {
             for (int i = 0; i < slots.Count; i++)
@@ -105,7 +100,6 @@ namespace Game
             newAbilitySlot.gameObject.SetActive(true);
             newAbilitySlot.SetAbility(abilityState, false);
         }
-
         private void OnClickOnSlot(int slotId)
         {
             if (selectingSlot)
@@ -117,7 +111,6 @@ namespace Game
                 if (slotId != -1) return;
             }
 
-            Debug.Log($"clicked {slotId}");
             selectedSlotId = slotId;
         }
     }

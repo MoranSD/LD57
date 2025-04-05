@@ -18,7 +18,7 @@ namespace Game
         public float Armor;
 
         public int MaxAbilitiesCount = 1;
-        public int AbilitiesCount => Abilities == null ? 0 : Abilities.Where(x => x != null).Count();
+        public int AbilitiesCount => Abilities.Where(x => x != null).Count();
         public AbilityState[] Abilities;
 
         public void SetModel(CMSEntity model)

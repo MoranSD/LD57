@@ -47,11 +47,15 @@ MonoBehaviour:
   Icon: {fileID: 0}
   builtId: 
   Components:
-  - rid: 2595387413948530938
+  - rid: 2595387422742937677
   references:
     version: 2
     RefIds:
-    - rid: 2595387413948530938
-      type: {class: TagAbilitiesHolder, ns: Game, asm: Assembly-CSharp}
+    - rid: 2595387422742937677
+      type: {class: TagHoleGenerationInfo, ns: Game, asm: Assembly-CSharp}
       data:
-        All: []
+        HoleAbilityChance: 50
+        EnemyExistentChance: 100
+        AbilityLinks:
+        - Id: /Abilities/Ability 0
+        - Id: /Abilities/Ability 1

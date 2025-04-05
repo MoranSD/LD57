@@ -77,11 +77,12 @@ namespace Game
 
         private void OnPointerEnterAbilitySlot(AbilitySlot slot)
         {
-            lastAbilitySlot = slot;
+            if (slot.HasState == false) return;
 
-            if (slot.State == null) return;
-            if (slot.State.Model.Is<TagDescription>(out var ds))
+            if (slot.State.Model.Is<TagDescription>(out var ds)) 
                 infoText.text = ds.Description;
+
+            lastAbilitySlot = slot;
         }
 
         private void OnPointerExitHole(HoleView view)

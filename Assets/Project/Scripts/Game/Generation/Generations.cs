@@ -14,18 +14,16 @@ namespace Game
         public CMSEntity HoleInfo;
     }
     [Serializable]
-    public class TagHoleGenerationChances : EntityComponentDefinition
+    public class TagHoleGenerationInfo : EntityComponentDefinition
     {
         [Range(0, 100)] public float HoleAbilityChance;
+        [Range(0, 100)] public float EnemyExistentChance;
+
+        public List<EntityLink> AbilityLinks;
     }
     [Serializable]
-    public class TagAbilitiesHolder : EntityComponentDefinition
+    public class TagEnemyGenerationInfo : EntityComponentDefinition
     {
-        public List<EntityLink> All;
-    }
-    [Serializable]
-    public class TagViewsHolder : EntityComponentDefinition
-    {
-        public List<Sprite> All;
+        public List<EntityLink> EntityLinks;
     }
 }

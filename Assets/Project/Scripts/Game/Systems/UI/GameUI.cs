@@ -4,21 +4,28 @@ namespace Game
 {
     public class GameUI : MonoBehaviour
     {
-        //public MapManager MapManager;
+        public ToolTip ToolTip;
 
         private void Awake()
         {
             G.UI = this;
         }
 
-        public void DisableUI()//hide all
+        public Vector3 GetMousePosition()
         {
-            
+            Vector3 screenPoint = Input.mousePosition;
+            screenPoint.z = 5f; //distance of the plane from the camera
+            return Camera.main.ScreenToWorldPoint(screenPoint);
         }
 
-        public void ShowLose()
+        public void DisableUI()
         {
+            ToolTip.DisableInfoShow();
+        }
 
+        public void EnableUI()
+        {
+            ToolTip.EnableInfoShow();
         }
     }
 }

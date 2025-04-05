@@ -21,6 +21,24 @@ namespace Common
     [Serializable]
     public class TagStartHealth : EntityComponentDefinition
     {
-        public int Val;
+        public float Val;
+    }
+
+    [Serializable]
+    public class TagMaxHealth : EntityComponentDefinition
+    {
+        public float Val;
+    }
+
+    [Serializable]
+    public class TagStartArmor : EntityComponentDefinition
+    {
+        public float Val;
+    }
+
+    [Serializable]
+    public class TagMaxArmor : EntityComponentDefinition
+    {
+        public float Val;
     }
 }

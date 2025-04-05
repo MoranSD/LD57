@@ -12,6 +12,7 @@ public class ResourceClassGenerator : AssetPostprocessor
     public const string PATH_TO_RESOURCES_FOLDER = "Resources";
     public const string PATH_TO_OUTPUT = "Generated";
     public const string OUTPUT_CLASS_NAME = "GameResources";
+    public const string IGNORED_FOLDER_PREFIX = "IgnoreTag"; // Папки с этим префиксом игнорируются
 
     private static bool _pendingGenerate = false;
 
@@ -28,7 +29,6 @@ public class ResourceClassGenerator : AssetPostprocessor
         string outputDirectory = Path.Combine(Application.dataPath, PATH_TO_OUTPUT);
         string outputPath = Path.Combine(outputDirectory, $"{OUTPUT_CLASS_NAME}.cs");
 
-        // Ensure the output directory exists
         if (!Directory.Exists(outputDirectory))
         {
             Directory.CreateDirectory(outputDirectory);
@@ -40,7 +40,6 @@ public class ResourceClassGenerator : AssetPostprocessor
         classBuilder.AppendLine("// This file is auto-generated. Do not modify manually.");
         classBuilder.AppendLine();
 
-        // Generate class body
         classBuilder.AppendLine($"public static class {OUTPUT_CLASS_NAME}");
         classBuilder.AppendLine("{");
 
@@ -48,7 +47,6 @@ public class ResourceClassGenerator : AssetPostprocessor
 
         classBuilder.AppendLine("}");
 
-        // Add collected namespaces at the top of the file
         StringBuilder finalBuilder = new StringBuilder();
         foreach (string ns in namespaces.OrderBy(n => n))
         {
@@ -58,11 +56,9 @@ public class ResourceClassGenerator : AssetPostprocessor
         finalBuilder.AppendLine();
         finalBuilder.Append(classBuilder.ToString());
 
-        // Write the file
         var isNewFile = !File.Exists(outputPath);
         File.WriteAllText(outputPath, finalBuilder.ToString());
 
-        // Refresh if it's new
         if (isNewFile)
         {
             AssetDatabase.Refresh();
@@ -77,8 +73,16 @@ public class ResourceClassGenerator : AssetPostprocessor
 
         foreach (string subFolder in subFolders)
         {
-            string folderName = EscapeToValidIdentifier(Path.GetFileName(subFolder));
-            classBuilder.AppendLine($"{indent}public static class {folderName}");
+            string folderName = Path.GetFileName(subFolder);
+
+            // Пропускаем папки с префиксом игнорирования
+            if (folderName.StartsWith(IGNORED_FOLDER_PREFIX))
+            {
+                continue;
+            }
+
+            string validFolderName = EscapeToValidIdentifier(folderName);
+            classBuilder.AppendLine($"{indent}public static class {validFolderName}");
             classBuilder.AppendLine($"{indent}{{");
             GenerateClassForFolder(subFolder, classBuilder, indent + "    ", namespaces);
             classBuilder.AppendLine($"{indent}}}");
@@ -164,28 +168,14 @@ public class ResourceClassGenerator : AssetPostprocessor
         StringBuilder validName = new StringBuilder();
         foreach (char c in name)
         {
-            if (char.IsLetterOrDigit(c) || c == '_')
-            {
-                validName.Append(c);
-            }
-            else
-            {
-                validName.Append('_');
-            }
+            validName.Append(char.IsLetterOrDigit(c) ? c : '_');
         }
 
-        if (char.IsDigit(validName[0]))
-        {
-            validName.Insert(0, '_');
-        }
+        if (validName.Length == 0) return "_empty_";
+        if (char.IsDigit(validName[0])) validName.Insert(0, '_');
+        if (IsCSharpKeyword(validName.ToString())) validName.Insert(0, '@');
 
-        string finalName = validName.ToString();
-        if (IsCSharpKeyword(finalName))
-        {
-            finalName = $"@{finalName}";
-        }
-
-        return finalName;
+        return validName.ToString();
     }
 
     private static bool IsCSharpKeyword(string word)
@@ -201,17 +191,13 @@ public class ResourceClassGenerator : AssetPostprocessor
             "volatile", "while"
         };
 
-        return ArrayUtility.Contains(keywords, word);
+        return Array.Exists(keywords, k => k == word);
     }
 
     private static string GetRelativePath(string fullPath)
     {
         int index = fullPath.IndexOf("Resources", StringComparison.Ordinal);
-        if (index == -1)
-        {
-            Debug.LogError($"Could not find 'Resources' in path: {fullPath}");
-            return null;
-        }
+        if (index == -1) return null;
 
         string relativePath = fullPath.Substring(index + "Resources/".Length);
         return relativePath.Replace("\\", "/").Replace(Path.GetExtension(fullPath), "");
@@ -223,7 +209,6 @@ public class ResourceClassGenerator : AssetPostprocessor
         string[] movedAssets,
         string[] movedFromAssetPaths)
     {
-        // Schedule class generation after recompilation
         if (!_pendingGenerate)
         {
             _pendingGenerate = true;
@@ -250,5 +235,4 @@ public class ResourceClassGenerator : AssetPostprocessor
         }
     }
 }
-
 #endif

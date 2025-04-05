@@ -3,6 +3,8 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using System.Linq;
+using Codice.Client.BaseCommands;
+using UnityEditor.Search;
 
 namespace Game
 {
@@ -33,7 +35,7 @@ namespace Game
                 // Открываем окно выбора типа
                 TypeSelectorWindow.Open(selectedType =>
                 {
-                    idProp.stringValue = selectedType.FullName;
+                    idProp.stringValue = selectedType;
                     idProp.serializedObject.ApplyModifiedProperties();
                 });
             }
@@ -51,11 +53,11 @@ namespace Game
     public class TypeSelectorWindow : EditorWindow
     {
         private string _searchQuery = "";
-        private List<Type> _filteredTypes;
-        private Action<Type> _onTypeSelected;
+        private List<string> _filteredTypes;
+        private Action<string> _onTypeSelected;
         private Vector2 _scrollPosition;
 
-        public static void Open(Action<Type> onTypeSelected)
+        public static void Open(Action<string> onTypeSelected)
         {
             var window = GetWindow<TypeSelectorWindow>(true, "Select CMSEntity Type");
             window._searchQuery = "";
@@ -77,9 +79,9 @@ namespace Game
 
             // Список типов с прокруткой
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
-            foreach (Type type in _filteredTypes)
+            foreach (var type in _filteredTypes)
             {
-                if (GUILayout.Button(type.FullName))
+                if (GUILayout.Button(type))
                 {
                     _onTypeSelected?.Invoke(type);
                     Close();
@@ -92,13 +94,18 @@ namespace Game
         {
             var allTypes = GetCMSDerivedTypes();
             _filteredTypes = allTypes
-                .Where(t => t.FullName.IndexOf(_searchQuery, StringComparison.OrdinalIgnoreCase) >= 0)
+                .Where(t => t.IndexOf(_searchQuery, StringComparison.OrdinalIgnoreCase) >= 0)
+                .OrderBy(t => t)
                 .ToList();
         }
 
-        private static List<Type> GetCMSDerivedTypes()
+        private static List<string> GetCMSDerivedTypes()
         {
-            return ReflectionUtil.FindAllSubslasses<CMSEntity>().ToList();
+            var types = ReflectionUtil.FindAllSubslasses<CMSEntity>().Select(x => x.FullName).ToList();
+            var resources = Resources.LoadAll<CMSEntityPfb>("CMS");
+            types.AddRange(resources.Select(x => x.GetId()));
+
+            return types;
         }
     }
 }

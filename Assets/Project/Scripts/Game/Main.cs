@@ -341,7 +341,7 @@ namespace Game
                 yield break;
             }
 
-            G.State.FightTurnTeam = TurnTeam.Enemy;
+            G.State.FightTurnTeam = TurnTeam.Enemy;  
 
             var inters2 = Interactor.FindAll<IOnTurnBegin>();
             foreach (var inter in inters2)

@@ -29,7 +29,7 @@ namespace Game
     {
         public bool CanUse(EntityState owner, AbilityState ability)
         {
-            if (ability.Model.Is<TagIncreaseArmorAbility>(out var ia))
+            if (ability.Model.Is<TagIncreaseArmorAbility>())
             {
                 return owner.Armor < owner.MaxArmor;
             }
@@ -44,6 +44,7 @@ namespace Game
             if (ability.Model.Is<TagIncreaseArmorAbility>(out var ia))
             {
                 owner.Armor = Mathf.Min(owner.MaxArmor, owner.Armor + ia.Armor);
+                owner.View.UpdateArmor();
                 yield break;
             }
         }

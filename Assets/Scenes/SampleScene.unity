@@ -839,7 +839,7 @@ MonoBehaviour:
       UsedItemsCount: 0
       MaxAbilitiesCount: 1
       Abilities: []
-  GradeCost: 5
+  GradeCost: 1
   HoleSelectionSceneParent: {fileID: 426670776}
   LeftHole: {fileID: 5248307900037283346}
   RightHole: {fileID: 267473283}

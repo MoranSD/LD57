@@ -75,6 +75,12 @@ namespace Game
         {
             if (slot.HasState == false) return;
 
+            if(slot.State.Model == null)
+            {
+                Debug.Log("Такого быть не должно!");
+                return;
+            }
+
             if (slot.State.Model.Is<TagDescription>(out var ds)) 
                 infoText.text = ds.Description;
         }

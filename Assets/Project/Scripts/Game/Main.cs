@@ -102,6 +102,41 @@ namespace Game
             if (entity.Model.Is<TagPlayer>()) return G.State.EnemyState;
             else return G.State.PlayerState;
         }
+        public EntityState GetEntity(TurnTeam team)
+        {
+            if (team == TurnTeam.Player) return G.State.PlayerState;
+            else if (team == TurnTeam.Enemy) return G.State.EnemyState;
+            else
+            {
+                Debug.Log("no entity for NoOne team");
+                return null;
+            }
+        }
+        public IEnumerator ApplySelfHeal(EntityState target, float heal)
+        {
+            if (target.IsDead)
+            {
+                Debug.Log("Cant heal dead target", target.View);
+                yield break;
+            }
+
+            target.Health = Mathf.Min(target.MaxHealth, target.Health + heal);
+            target.View.UpdateHealth();
+        }
+        public IEnumerator ApplySelfStun(EntityState target, int stunCycles)
+        {
+            target.StunCycles = stunCycles;
+            target.CyclesAfterStun = 0;
+            Debug.Log("todo: stun effect");
+            yield break;
+        }
+        public IEnumerator ApplyStun(EntityState stunner, EntityState target, int stunCycles)
+        {
+            target.StunCycles = stunCycles;
+            target.CyclesAfterStun = 0;
+            Debug.Log("todo: stun effect");
+            yield break;
+        }
         public IEnumerator UseAbility(EntityState owner, AbilityState ability)
         {
             if (usingAbility) yield break;
@@ -121,7 +156,7 @@ namespace Game
 
             usingAbility = false;
         }
-        public IEnumerator ApplyDamage(EntityState attacker, EntityState entity, float damage)
+        public IEnumerator ApplyDamage(EntityState attacker, EntityState target, float damage, bool throughArmor = false)
         {
             //var damageProperty = new PropertyLink<float>(damage);
 
@@ -131,37 +166,37 @@ namespace Game
 
             //damageProperty.Value
 
-            if (entity.Armor > 0)
+            if (target.Armor > 0 && !throughArmor)
             {
-                if(entity.Armor >= damage)
+                if(target.Armor >= damage)
                 {
-                    entity.Armor -= damage;
-                    entity.View.UpdateArmor();
+                    target.Armor -= damage;
+                    target.View.UpdateArmor();
                 }
                 else
                 {
-                    var remainingDamage = damage - entity.Armor;
-                    entity.Armor = 0;
-                    entity.Health -= remainingDamage;
-                    entity.View.UpdateArmor();
-                    entity.View.UpdateHealth();
+                    var remainingDamage = damage - target.Armor;
+                    target.Armor = 0;
+                    target.Health -= remainingDamage;
+                    target.View.UpdateArmor();
+                    target.View.UpdateHealth();
                 }
             }
             else
             {
-                entity.Health -= damage;
-                entity.View.UpdateHealth();
+                target.Health -= damage;
+                target.View.UpdateHealth();
             }
 
-            if (entity.Health <= 0)
+            if (target.Health <= 0)
             {
                 //var inters2 = Interactor.FindAll<IOnBeforeEntityDie>();
                 //foreach (var inter in inters2)
                 //    yield return inter.OnBeforeEntityDie(entity);
 
-                if (entity.Health <= 0)
+                if (target.Health <= 0)
                 {
-                    entity.View.DrawDie();
+                    target.View.DrawDie();
                 }
             }
 
@@ -308,12 +343,26 @@ namespace Game
             foreach (var inter in inters)
                 yield return inter.OnTurnBegin(TurnTeam.Player);
 
-            G.State.FightTurnTeam = TurnTeam.Player;
-            G.HUD.EnableFightHud();
+            if (CheckFightEnd(out var endState))
+            {
+                yield return EndFightLoop(endState);
+                yield break;
+            }
+
+            if (G.State.PlayerState.IsStunned)
+            {
+                yield return BeginEnemyFightCycle();
+            }
+            else
+            {
+                G.State.FightTurnTeam = TurnTeam.Player;
+                G.HUD.EnableFightHud();
+            }
         }
         private void OnPressEndTurn()
         {
             if (G.State.FightTurnTeam != TurnTeam.Player) return;
+            if (usingAbility) return;
 
             StartCoroutine(BeginEnemyFightCycle());
         }
@@ -331,11 +380,17 @@ namespace Game
             G.State.FightTurnTeam = TurnTeam.NoOne;
             G.HUD.DisableFightHud();
 
+            if (CheckFightEnd(out var endState))
+            {
+                yield return EndFightLoop(endState);
+                yield break;
+            }
+
             var inters = Interactor.FindAll<IOnTurnEnd>();
             foreach (var inter in inters)
                 yield return inter.OnTurnEnd(TurnTeam.Player);
 
-            if (CheckFightEnd(out var endState))
+            if (CheckFightEnd(out endState))
             {
                 yield return EndFightLoop(endState);
                 yield break;
@@ -347,7 +402,19 @@ namespace Game
             foreach (var inter in inters2)
                 yield return inter.OnTurnBegin(TurnTeam.Enemy);
 
+            if (CheckFightEnd(out endState))
+            {
+                yield return EndFightLoop(endState);
+                yield break;
+            }
+
             yield return ControlFightEnemy();
+
+            if (CheckFightEnd(out endState))
+            {
+                yield return EndFightLoop(endState);
+                yield break;
+            }
 
             var inters3 = Interactor.FindAll<IOnTurnEnd>();
             foreach (var inter in inters3)
@@ -363,7 +430,9 @@ namespace Game
         }
         private IEnumerator ControlFightEnemy()
         {
-            if(G.State.EnemyState.IsDead)
+            if (G.State.EnemyState.IsStunned)
+                yield break;
+            if (G.State.EnemyState.IsDead)
                 yield break;
 
             var abilities = G.State.EnemyState.Abilities.ToList();
@@ -378,7 +447,7 @@ namespace Game
                     continue;
 
                 var filters = Interactor.FindAll<ICanUseAbilityFilter>();
-                bool canUse = true;
+                bool canUse = true; 
                 foreach (var filter in filters)
                 {
                     if(filter.CanUse(G.State.EnemyState, targetAbility) == false)

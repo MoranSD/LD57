@@ -11,6 +11,10 @@ namespace Game
         public CMSEntity Model;
         public EntityView View;
 
+        public bool IsStunned => StunCycles > 0;
+        public int StunCycles;
+        public int CyclesAfterStun;
+
         public bool IsDead => Health <= 0;
         public float MaxHealth;
         public float Health;

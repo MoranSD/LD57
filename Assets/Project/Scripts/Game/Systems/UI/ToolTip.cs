@@ -77,7 +77,7 @@ namespace Game
 
             if(slot.State.Model == null)
             {
-                Debug.Log("Такого быть не должно!");
+                Debug.LogError("Такого быть не должно!");
                 return;
             }
 

@@ -4,6 +4,11 @@ using System.Collections.Generic;
 namespace Game
 {
     [Serializable]
+    public class TagPlayer : EntityComponentDefinition
+    {
+
+    }
+    [Serializable]
     public class TagStartAbilities : EntityComponentDefinition
     {
         public List<EntityLink> All;

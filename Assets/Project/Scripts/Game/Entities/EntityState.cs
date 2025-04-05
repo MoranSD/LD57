@@ -1,6 +1,5 @@
 ﻿using Common;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -12,10 +11,14 @@ namespace Game
         public CMSEntity Model;
         public EntityView View;
 
+        public bool IsDead => Health <= 0;
         public float MaxHealth;
         public float Health;
         public float MaxArmor;
         public float Armor;
+
+        public int UsedAbilitiesCount;
+        public int UsedItemsCount;
 
         public int MaxAbilitiesCount = 1;
         public int AbilitiesCount => Abilities.Where(x => x != null).Count();

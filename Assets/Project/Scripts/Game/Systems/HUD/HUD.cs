@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -10,7 +11,11 @@ namespace Game
         public Action<AbilitySlot> OnPointerEnterAbilitySlot;
         public Action<AbilitySlot> OnPointerExitAbilitySlot;
 
+        [Header("Hole selection")]
         public NewAbilitySelectionPanel AbilitySelectionPanel;
+        [Header("Fight")]
+        public FightAbilitiesPanel AbilitiesPanel;
+        public Button EndTurnButton;
 
         private void Awake()
         {
@@ -19,7 +24,19 @@ namespace Game
 
         public void DisableHud()
         {
+            DisableFightHud();
+        }
 
+        public void EnableFightHud()
+        {
+            EndTurnButton.gameObject.SetActive(true);
+            AbilitiesPanel.Show();
+        }
+
+        public void DisableFightHud()
+        {
+            EndTurnButton.gameObject.SetActive(false);
+            AbilitiesPanel.Hide();
         }
     }
 }

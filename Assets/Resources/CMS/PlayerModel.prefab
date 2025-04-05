@@ -47,6 +47,7 @@ MonoBehaviour:
   Icon: {fileID: 0}
   builtId: 
   Components:
+  - rid: 2595387422742937699
   - rid: 2595387418287013980
   - rid: 2595387418287013981
   - rid: 2595387418287013979
@@ -81,3 +82,6 @@ MonoBehaviour:
       type: {class: TagMaxAbilities, ns: Game, asm: Assembly-CSharp}
       data:
         count: 3
+    - rid: 2595387422742937699
+      type: {class: TagPlayer, ns: Game, asm: Assembly-CSharp}
+      data: 

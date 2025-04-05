@@ -1,4 +1,5 @@
 ﻿using Common;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,9 +16,6 @@ namespace Game
 
         [SerializeField] private RectTransform infoRect;
         [SerializeField] private TextMeshProUGUI infoText;
-
-        private HoleView lastHoleView;
-        private AbilitySlot lastAbilitySlot;
 
         private void Update()
         {
@@ -59,6 +57,7 @@ namespace Game
             G.HUD.OnPointerEnterAbilitySlot += OnPointerEnterAbilitySlot;
             G.HUD.OnPointerExitAbilitySlot += OnPointerExitAbilitySlot;
         }
+
         private void OnDestroy()
         {
             G.HUD.OnPointerEnterHole -= OnPointerEnterHole;
@@ -69,9 +68,6 @@ namespace Game
 
         private void OnPointerExitAbilitySlot(AbilitySlot slot)
         {
-            if (lastAbilitySlot != slot) return;
-
-            lastAbilitySlot = null;
             infoText.text = "";
         }
 
@@ -81,22 +77,15 @@ namespace Game
 
             if (slot.State.Model.Is<TagDescription>(out var ds)) 
                 infoText.text = ds.Description;
-
-            lastAbilitySlot = slot;
         }
 
         private void OnPointerExitHole(HoleView view)
         {
-            if (lastHoleView != view) return;
-
-            lastHoleView = null;
             infoText.text = "";
         }
 
         private void OnPointerEnterHole(HoleView view)
         {
-            lastHoleView = view;
-
             var info = "";
 
             if (view.State.HasAbility)

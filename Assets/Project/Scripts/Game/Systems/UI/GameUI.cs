@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Game
 {
@@ -26,6 +27,11 @@ namespace Game
         public void EnableUI()
         {
             ToolTip.EnableInfoShow();
+        }
+
+        public void ShowLose()
+        {
+            Debug.Log("todo: lose screen");
         }
     }
 }

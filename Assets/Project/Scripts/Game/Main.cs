@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Game
 {
@@ -26,6 +28,7 @@ namespace Game
         public HoleState RightHoleInfo;
 
         public bool Fighting;
+        public TurnTeam FightTurnTeam = TurnTeam.NoOne;
         public EntityState EnemyState;
 
         public EntityState PlayerState;
@@ -49,6 +52,8 @@ namespace Game
 
         private Dictionary<int, GenerationInfo> generationInfosMap = new();
 
+        private bool usingAbility;
+
         private void Awake()
         {
             Interactor = new Interactor();
@@ -69,11 +74,17 @@ namespace Game
             G.State.PlayerState.SetModel(GameResources.CMS.PlayerModel.AsEntity());
             LoadGenerationInfo();
             StartCoroutine(EnterHoleSelectionScene());
+
+            G.HUD.EndTurnButton.onClick.AddListener(OnPressEndTurn);
+            G.HUD.AbilitiesPanel.OnSelectAbility += OnSelectFightAbility;
         }
         private void OnDestroy()
         {
             LeftHole.OnPressed -= OnSelectHole;
             RightHole.OnPressed -= OnSelectHole;
+
+            G.HUD.EndTurnButton.onClick.RemoveAllListeners();
+            G.HUD.AbilitiesPanel.OnSelectAbility -= OnSelectFightAbility;
         }
 
         private void Update()
@@ -86,6 +97,77 @@ namespace Game
 #endif
         }
 
+        public EntityState GetOpponent(EntityState entity)
+        {
+            if (entity.Model.Is<TagPlayer>()) return G.State.EnemyState;
+            else return G.State.PlayerState;
+        }
+        public IEnumerator UseAbility(EntityState owner, AbilityState ability)
+        {
+            if (usingAbility) yield break;
+            if (owner.UsedAbilitiesCount > 0) yield break;
+
+            var filters = Interactor.FindAll<ICanUseAbilityFilter>();
+            foreach (var filter in filters)
+                if (filter.CanUse(owner, ability) == false)
+                    yield break;
+
+            usingAbility = true;
+
+            owner.UsedAbilitiesCount++;
+            var inters = Interactor.FindAll<IOnUseAbility>();
+            foreach (var inter in inters)
+                yield return inter.OnUseAbility(owner, ability);
+
+            usingAbility = false;
+        }
+        public IEnumerator ApplyDamage(EntityState attacker, EntityState entity, float damage)
+        {
+            //var damageProperty = new PropertyLink<float>(damage);
+
+            //var inters = Interactor.FindAll<IOnEntityApplyDamage>();
+            //foreach (var inter in inters)
+            //    yield return inter.OnEntityApplyDamage(attacker, entity, damageProperty);
+
+            //damageProperty.Value
+
+            if (entity.Armor > 0)
+            {
+                if(entity.Armor >= damage)
+                {
+                    entity.Armor -= damage;
+                    entity.View.UpdateArmor();
+                }
+                else
+                {
+                    var remainingDamage = damage - entity.Armor;
+                    entity.Armor = 0;
+                    entity.Health -= remainingDamage;
+                    entity.View.UpdateArmor();
+                    entity.View.UpdateHealth();
+                }
+            }
+            else
+            {
+                entity.Health -= damage;
+                entity.View.UpdateHealth();
+            }
+
+            if (entity.Health <= 0)
+            {
+                //var inters2 = Interactor.FindAll<IOnBeforeEntityDie>();
+                //foreach (var inter in inters2)
+                //    yield return inter.OnBeforeEntityDie(entity);
+
+                if (entity.Health <= 0)
+                {
+                    entity.View.DrawDie();
+                }
+            }
+
+            yield break;
+        }
+
         private IEnumerator UnloadScene()
         {
             G.State.SelectingHole = false;
@@ -94,11 +176,12 @@ namespace Game
             HoleSelectionSceneParent.SetActive(false);
 
             G.State.Fighting = false;
+            G.State.FightTurnTeam = TurnTeam.NoOne;
             G.State.EnemyState = null;
             FightingSceneParent.SetActive(false);
             yield break;
         }
-        private IEnumerator EnterNextHole()
+        private IEnumerator EnterNextHoleSelectionScene()
         {
             G.State.Level++;
             G.State.Grade = Mathf.Min(G.State.Level / GradeCost, generationInfosMap.Count - 1);
@@ -193,7 +276,7 @@ namespace Game
             }
             else
             {
-                yield return EnterNextHole();
+                yield return EnterNextHoleSelectionScene();
             }
         }
 
@@ -211,6 +294,7 @@ namespace Game
             G.State.EnemyState.SetModel(CMS.Get<CMSEntity>(targetEntityLink.Id));
             EnemyView.SetState(G.State.EnemyState);
 
+            G.State.FightTurnTeam = TurnTeam.NoOne;
             G.State.Fighting = true;
             FightingSceneParent.SetActive(true);
 
@@ -218,22 +302,131 @@ namespace Game
         }
         private IEnumerator BeginFightCycle()
         {
-            /*
-             * как собственно и раньше
-             * 
-             * вызываем ивент начала цикла
-             * вызываем ивент конца цикла игрока
-             * вызываем ивент конца цикла врага
-             * 
-             * враг по сути выбирает 1 из всех абилок и использует ее
-             * 
-             * проверку на то, стоит ли использовать способность врагу
-             * можно сделать через "фильтры", которые будут принимать PropertyLink<bool>
-             * 
-             * тогда можно будет быстро прописывать это после создания способности
-             */
+            G.State.FightTurnTeam = TurnTeam.NoOne;
 
-            yield break;
+            var inters = Interactor.FindAll<IOnTurnBegin>();
+            foreach (var inter in inters)
+                yield return inter.OnTurnBegin(TurnTeam.Player);
+
+            G.State.FightTurnTeam = TurnTeam.Player;
+            G.HUD.EnableFightHud();
+        }
+        private void OnPressEndTurn()
+        {
+            if (G.State.FightTurnTeam != TurnTeam.Player) return;
+
+            StartCoroutine(BeginEnemyFightCycle());
+        }
+        private void OnSelectFightAbility(int id)
+        {
+            if (G.State.FightTurnTeam != TurnTeam.Player) return;
+            if (usingAbility) return;
+            if (id < 0 || id >= G.State.PlayerState.Abilities.Length) return;
+            if (G.State.PlayerState.Abilities[id] == null) return;
+
+            StartCoroutine(UseAbility(G.State.PlayerState, G.State.PlayerState.Abilities[id]));
+        }
+        private IEnumerator BeginEnemyFightCycle()
+        {
+            G.State.FightTurnTeam = TurnTeam.NoOne;
+            G.HUD.DisableFightHud();
+
+            var inters = Interactor.FindAll<IOnTurnEnd>();
+            foreach (var inter in inters)
+                yield return inter.OnTurnEnd(TurnTeam.Player);
+
+            if (CheckFightEnd(out var endState))
+            {
+                yield return EndFightLoop(endState);
+                yield break;
+            }
+
+            G.State.FightTurnTeam = TurnTeam.Enemy;
+
+            var inters2 = Interactor.FindAll<IOnTurnBegin>();
+            foreach (var inter in inters2)
+                yield return inter.OnTurnBegin(TurnTeam.Enemy);
+
+            yield return ControlFightEnemy();
+
+            var inters3 = Interactor.FindAll<IOnTurnEnd>();
+            foreach (var inter in inters3)
+                yield return inter.OnTurnEnd(TurnTeam.Enemy);
+
+            if (CheckFightEnd(out endState))
+            {
+                yield return EndFightLoop(endState);
+                yield break;
+            }
+
+            yield return BeginFightCycle();
+        }
+        private IEnumerator ControlFightEnemy()
+        {
+            if(G.State.EnemyState.IsDead)
+                yield break;
+
+            var abilities = G.State.EnemyState.Abilities.ToList();
+            var checkedAbilities = new List<AbilityState>();
+
+            while (true)
+            {
+                abilities.Shuffle();
+                var targetAbility = abilities[0];
+
+                if (checkedAbilities.Contains(targetAbility))
+                    continue;
+
+                var filters = Interactor.FindAll<ICanUseAbilityFilter>();
+                bool canUse = true;
+                foreach (var filter in filters)
+                {
+                    if(filter.CanUse(G.State.EnemyState, targetAbility) == false)
+                    {
+                        checkedAbilities.Add(targetAbility);
+                        canUse = false;
+                        break;
+                    }
+                }
+
+                if (canUse)
+                {
+                    yield return UseAbility(G.State.EnemyState, targetAbility);
+                    yield break;
+                }
+                else if (checkedAbilities.Count == abilities.Count)
+                    yield break;
+            }
+        }
+        private bool CheckFightEnd(out int winStateId)
+        {
+            if (G.State.EnemyState.IsDead)
+            {
+                winStateId = 1;//win
+                return true;
+            }
+            if (G.State.PlayerState.IsDead)
+            {
+                winStateId = 0;//lose
+                return true;
+            }
+
+            winStateId = -1;
+            return false;
+        }
+        private IEnumerator EndFightLoop(int winStateId)
+        {
+            if (winStateId == 1)//win
+            {
+                yield return EnterNextHoleSelectionScene();
+            }
+            else if (winStateId == 0)//lose
+            {
+                G.State.FightTurnTeam = TurnTeam.NoOne;
+                G.State.Fighting = false;
+                G.HUD.DisableHud();
+                G.UI.ShowLose();
+            }
         }
 
         private GenerationInfo GetCurrentGenInfo() => generationInfosMap[G.State.Grade];

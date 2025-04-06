@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Icon: {fileID: 0}
-  builtId: 
+  builtId: /IgnoreTag_Abilities/Ability_ApplyDamage_4
   Components:
   - rid: 2595387418287013989
   - rid: 2595387418287013991

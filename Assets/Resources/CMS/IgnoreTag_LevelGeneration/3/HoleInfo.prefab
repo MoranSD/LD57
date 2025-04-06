@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Icon: {fileID: 0}
-  builtId: 
+  builtId: /IgnoreTag_LevelGeneration/3/HoleInfo
   Components:
   - rid: 2595387422742937677
   references:

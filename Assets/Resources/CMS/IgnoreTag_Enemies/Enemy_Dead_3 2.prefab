@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Icon: {fileID: 0}
-  builtId: 
+  builtId: /IgnoreTag_Enemies/Enemy_Dead_3 2
   Components:
   - rid: 2595387418287013980
   - rid: 2595387418287013981

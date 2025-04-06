@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Icon: {fileID: 0}
-  builtId: 
+  builtId: /PlayerModel
   Components:
   - rid: 2595387422742937699
   - rid: 2595387418287013980

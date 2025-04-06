@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Icon: {fileID: 0}
-  builtId: 
+  builtId: /IgnoreTag_Abilities/Ability_IncreaseArmor_2
   Components:
   - rid: 2595387418287013990
   - rid: 2595387418287013992

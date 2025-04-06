@@ -63,6 +63,9 @@ namespace Game
                 if (G.State.PlayerState.IsStunned)
                 {
                     G.State.PlayerState.StunCycles--;
+
+                    if (G.State.PlayerState.StunCycles == 0)
+                        G.State.PlayerState.View.SetStun(false);
                 }
                 else
                 {
@@ -77,6 +80,9 @@ namespace Game
                 if (G.State.EnemyState.IsStunned)
                 {
                     G.State.EnemyState.StunCycles--;
+
+                    if (G.State.EnemyState.StunCycles == 0)
+                        G.State.EnemyState.View.SetStun(false);
                 }
                 else
                 {
@@ -93,6 +99,10 @@ namespace Game
             G.State.PlayerState.CyclesAfterStun = 0;
             G.State.PlayerState.UsedAbilitiesCount = 0;
             G.State.PlayerState.UsedItemsCount = 0;
+            G.State.PlayerState.View.SetStun(false);
+            G.State.EnemyState.View.SetStun(false);
+            G.State.PlayerState.View.SetBleeding(false);
+            G.State.EnemyState.View.SetBleeding(false);
             G.State.ActiveEvents.Clear();
             yield break;
         }

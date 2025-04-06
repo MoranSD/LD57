@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,6 +27,16 @@ namespace Game
             }
         }
 
+        public IEnumerator SayScenario(List<string> sayLines, float delay = 2f)
+        {
+            foreach (string line in sayLines)
+            {
+                yield return Say(line);
+                yield return SmartWait(delay);
+            }
+
+            yield return Unsay();
+        }
         public IEnumerator SmartWait(float f)
         {
             skip = false;

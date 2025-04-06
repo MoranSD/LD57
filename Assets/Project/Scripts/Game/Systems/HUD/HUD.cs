@@ -8,6 +8,8 @@ namespace Game
     {
         public Action<HoleView> OnPointerEnterHole;
         public Action<HoleView> OnPointerExitHole;
+        public Action<EntityView> OnPointerEnterEntity;
+        public Action<EntityView> OnPointerExitEntity;
         public Action<AbilitySlot> OnPointerEnterAbilitySlot;
         public Action<AbilitySlot> OnPointerExitAbilitySlot;
 

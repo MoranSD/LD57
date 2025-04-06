@@ -55,10 +55,7 @@ MonoBehaviour:
     - rid: 2595387418287013991
       type: {class: TagDescription, ns: Common, asm: Assembly-CSharp}
       data:
-        Description: "\u0412\u0442\u043E\u0440\u043E\u0439 \u0448\u0430\u043D\u0441.
-          \u041F\u0435\u0440\u0435\u0434 \u0441\u043C\u0435\u0440\u0442\u044C\u044E
-          \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u0430\u0432\u043B\u0438\u0432\u0430\u0435\u0442
-          \u0437\u0434\u043E\u0440\u043E\u0432\u044C\u0435 \u0434\u043E 2 \u0445\u043F"
+        Description: A second chance. Restores up to 2 hp of health before death
     - rid: 2595387441571692693
       type: {class: TagSecondChanceEvent, ns: Game, asm: Assembly-CSharp}
       data:

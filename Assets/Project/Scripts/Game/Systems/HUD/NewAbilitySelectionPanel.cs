@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace Game
@@ -15,6 +16,7 @@ namespace Game
         [SerializeField] private GameObject panel;
         [SerializeField] private List<AbilitySlot> slots;
         [SerializeField] private AbilitySlot newAbilitySlot;
+        [SerializeField] private TextMeshProUGUI tipText;
 
         private Vector2 newAbilitySlotDefaultPosition;
         private int selectedSlotId = -1;
@@ -42,6 +44,7 @@ namespace Game
 
         public IEnumerator ShowAbilityMoveToSlot(AbilityState abilityState, EntityState playerState, int slotId)
         {
+            tipText.text = "Сonfirm receipt";
             IsVisible = true;
             panel.SetActive(true);
             PrepareEnvironment(abilityState, playerState);
@@ -57,6 +60,7 @@ namespace Game
         }
         public IEnumerator SelectAbilitySlot(AbilityState abilityState, EntityState playerState)
         {
+            tipText.text = "Сhoose what to replace";
             IsVisible = true;
             panel.SetActive(true);
             PrepareEnvironment(abilityState, playerState);

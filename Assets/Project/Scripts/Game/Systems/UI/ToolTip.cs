@@ -1,5 +1,6 @@
 ﻿using Common;
 using System;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +19,7 @@ namespace Game
         [SerializeField] private TextMeshProUGUI infoText;
 
         private bool isShowingHoleInfo;
+        private bool isShowingEntityInfo;
 
         private void Update()
         {
@@ -60,6 +62,8 @@ namespace Game
             G.HUD.OnPointerExitAbilitySlot += OnPointerExitAbilitySlot;
             G.HUD.AbilitySelectionPanel.Opened += OnOpenAbilitySelection;
             G.Main.OnChangeScene += OnChangeScene;
+            G.HUD.OnPointerEnterEntity += OnPointerEnterEntity;
+            G.HUD.OnPointerExitEntity += OnPointerExitEntity;
         }
 
         private void OnDestroy()
@@ -70,20 +74,63 @@ namespace Game
             G.HUD.OnPointerExitAbilitySlot -= OnPointerExitAbilitySlot;
             G.HUD.AbilitySelectionPanel.Opened -= OnOpenAbilitySelection;
             G.Main.OnChangeScene -= OnChangeScene;
+            G.HUD.OnPointerEnterEntity -= OnPointerEnterEntity;
+            G.HUD.OnPointerExitEntity -= OnPointerExitEntity;
+        }
+
+        private void OnPointerExitEntity(EntityView view)
+        {
+            if (G.HUD.AbilitySelectionPanel.IsVisible) return;
+            if (isShowingEntityInfo == false) return;
+
+            isShowingEntityInfo = false;
+            infoText.text = "";
+        }
+
+        private void OnPointerEnterEntity(EntityView view)
+        {
+            if (G.HUD.AbilitySelectionPanel.IsVisible) return;
+
+            var info = "";
+
+            info += $"Health: {view.State.Health}\n";
+            info += $"Armor: {view.State.Armor}\n";
+
+            if (view.State.IsStunned)
+                info += $"Stunned - {view.State.StunCycles}\n";
+            if (view.State.IsBleeding)
+                info += $"Stunned - {view.State.BleedingCycles}\n";
+
+            if (view.State.Model.Is<TagPlayer>() == false)
+            {
+                info += "Abilities:\n";
+
+                foreach (var ability in view.State.Abilities.Select(x => x.Model))
+                {
+                    if (ability.Is<TagDescription>(out var d))
+                        info += "   " + d.Description + "\n";
+                }
+            }
+
+            infoText.text = info;
+            isShowingEntityInfo = true;
         }
 
         private void OnChangeScene()
         {
+            isShowingEntityInfo = false;
             isShowingHoleInfo = false;
             infoText.text = "";
         }
 
         private void OnOpenAbilitySelection()
         {
-            if (isShowingHoleInfo == false) return;
-
-            isShowingHoleInfo = false;
-            infoText.text = "";
+            if (isShowingHoleInfo || isShowingEntityInfo)
+            {
+                isShowingEntityInfo = false;
+                isShowingHoleInfo = false;
+                infoText.text = "";
+            }
         }
 
         private void OnPointerExitAbilitySlot(AbilitySlot slot)
@@ -117,11 +164,12 @@ namespace Game
         private void OnPointerEnterHole(HoleView view)
         {
             if (G.HUD.AbilitySelectionPanel.IsVisible) return;
+            if (view.State == null) return;
 
             isShowingHoleInfo = true;
             var info = "";
 
-            if (view.State.HasEvent)
+            if (view.State.HasEvent) 
             {
                 if (view.State.Event.Is<TagDescription>(out var ds))
                     info += $"Event - {ds.Description}";

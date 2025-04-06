@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5934232861837107857
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1284060230688678603}
+  - component: {fileID: 518076679880797475}
+  m_Layer: 0
+  m_Name: Enemy_Dead_2 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1284060230688678603
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5934232861837107857}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &518076679880797475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5934232861837107857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebe0ba584a91b194a87520904b5c80fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 0}
+  builtId: 
+  Components:
+  - rid: 2595387418287013980
+  - rid: 2595387418287013981
+  - rid: 2595387418287013979
+  - rid: 2595387418287013982
+  - rid: 2595387418287013978
+  - rid: 2595387418287013983
+  - rid: 2595387441571692818
+  references:
+    version: 2
+    RefIds:
+    - rid: 2595387418287013978
+      type: {class: TagStartAbilities, ns: Game, asm: Assembly-CSharp}
+      data:
+        All:
+        - Id: /IgnoreTag_Abilities/Ability_ApplyDamage_2
+        - Id: /IgnoreTag_Abilities/Ability_ApplyBleeding_3_1
+    - rid: 2595387418287013979
+      type: {class: TagStartArmor, ns: Common, asm: Assembly-CSharp}
+      data:
+        Val: 0
+    - rid: 2595387418287013980
+      type: {class: TagStartHealth, ns: Common, asm: Assembly-CSharp}
+      data:
+        Val: 5
+    - rid: 2595387418287013981
+      type: {class: TagMaxHealth, ns: Common, asm: Assembly-CSharp}
+      data:
+        Val: 5
+    - rid: 2595387418287013982
+      type: {class: TagMaxArmor, ns: Common, asm: Assembly-CSharp}
+      data:
+        Val: 0
+    - rid: 2595387418287013983
+      type: {class: TagMaxAbilities, ns: Game, asm: Assembly-CSharp}
+      data:
+        count: 2
+    - rid: 2595387441571692818
+      type: {class: TagSprite, ns: Common, asm: Assembly-CSharp}
+      data:
+        Sprite: {fileID: -525634377, guid: 866e653e50e30c2418369ffdfcaaed26, type: 3}

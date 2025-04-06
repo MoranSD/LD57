@@ -55,9 +55,7 @@ MonoBehaviour:
     - rid: 2595387418287013991
       type: {class: TagDescription, ns: Common, asm: Assembly-CSharp}
       data:
-        Description: "\u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0432\u0430\u0435\u0442
-          \u0431\u0440\u043E\u043D\u044E \u043D\u0430 1 (\u043D\u0435 \u043F\u043E\u0434\u043D\u0438\u043C\u0435\u0442\u0441\u044F
-          \u0432\u044B\u0448\u0435 \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E\u0433\u043E)"
+        Description: Increases armor by 1 (will not rise above the maximum)
     - rid: 2595387441571692682
       type: {class: TagArmorChangeEvent, ns: Game, asm: Assembly-CSharp}
       data:

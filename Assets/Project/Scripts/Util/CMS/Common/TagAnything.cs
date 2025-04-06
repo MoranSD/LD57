@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Common
 {
@@ -10,6 +11,12 @@ namespace Common
     public class TagPrefab : EntityComponentDefinition
     {
         public UnityEngine.Object Prefab;
+    }
+
+    [Serializable]
+    public class TagSprite : EntityComponentDefinition
+    {
+        public Sprite Sprite;
     }
 
     [Serializable]

@@ -55,4 +55,6 @@ MonoBehaviour:
       type: {class: TagEnemyGenerationInfo, ns: Game, asm: Assembly-CSharp}
       data:
         EntityLinks:
-        - Id: /IgnoreTag_Enemies/Enemy0
+        - Id: /IgnoreTag_Enemies/Enemy_Dead_2 0
+        - Id: /IgnoreTag_Enemies/Enemy_Dead_2 1
+        - Id: /IgnoreTag_Enemies/Enemy_Dead_2 2

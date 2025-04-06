@@ -50,6 +50,33 @@ namespace Game
         }
     }
     [Serializable]
+    public class TagIncreaseHealthAbility : EntityComponentDefinition
+    {
+        public float Health;
+    }
+    public class IncreaseHealthAbilityCheck : BaseInteraction, ICanUseAbilityFilter
+    {
+        public bool CanUse(EntityState owner, AbilityState ability)
+        {
+            if (ability.Model.Is<TagIncreaseHealthAbility>())
+            {
+                return owner.Health < owner.MaxHealth;
+            }
+
+            return true;
+        }
+    }
+    public class IncreaseHealthAbilityUse : BaseInteraction, IOnUseAbility
+    {
+        public IEnumerator OnUseAbility(EntityState owner, AbilityState ability)
+        {
+            if (ability.Model.Is<TagIncreaseHealthAbility>(out var ia))
+            {
+                yield return G.Main.ApplySelfHeal(owner, ia.Health); 
+            }
+        }
+    }
+    [Serializable]
     public class TagApplyDamageThroughArmorAbility : EntityComponentDefinition
     {
         public float Damage;
@@ -69,15 +96,16 @@ namespace Game
     public class TagApplyStunAbility : EntityComponentDefinition
     {
         public int StunCycles;
+        public int ReloadCycles;
     }
     public class ApplyStunAbilityCheck : BaseInteraction, ICanUseAbilityFilter
     {
         public bool CanUse(EntityState owner, AbilityState ability)
         {
-            if (ability.Model.Is<TagApplyStunAbility>())
+            if (ability.Model.Is<TagApplyStunAbility>(out var asa))
             {
                 var opponent = G.Main.GetOpponent(owner);
-                return !opponent.IsStunned && opponent.CyclesAfterStun >= 1;
+                return !opponent.IsStunned && (opponent.Model.Is<TagPlayer>() ? opponent.CyclesAfterStun >= asa.ReloadCycles : true);
             }
 
             return true;
@@ -161,6 +189,10 @@ namespace Game
 
                     ability.ActiveCycles--;
                     var opponent = G.Main.GetOpponent(owner);
+
+                    if(ability.ActiveCycles == 0)
+                        opponent.View.SetBleeding(false);
+
                     yield return G.Main.ApplyDamage(owner, opponent, ab.Damage, true);
                 }
             }
@@ -172,6 +204,7 @@ namespace Game
             {
                 ability.ActiveCycles = ab.Cycles;
                 var opponent = G.Main.GetOpponent(owner);
+                opponent.View.SetBleeding(true);
                 yield return G.Main.ApplyDamage(owner, opponent, ab.Damage, true);
             }
         }

@@ -55,8 +55,7 @@ MonoBehaviour:
     - rid: 2595387418287013991
       type: {class: TagDescription, ns: Common, asm: Assembly-CSharp}
       data:
-        Description: "\u041F\u043E\u043B\u043D\u043E\u0441\u0442\u044C\u044E \u0443\u0431\u0438\u0440\u0430\u0435\u0442
-          \u0431\u0440\u043E\u043D\u044E"
+        Description: Completely removes armor
     - rid: 2595387441571692672
       type: {class: TagFullArmorChangeEvent, ns: Game, asm: Assembly-CSharp}
       data:

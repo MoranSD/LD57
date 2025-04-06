@@ -55,10 +55,7 @@ MonoBehaviour:
     - rid: 2595387418287013991
       type: {class: TagDescription, ns: Common, asm: Assembly-CSharp}
       data:
-        Description: "\u0412\u0430\u0448\u0430 \u0431\u0440\u043E\u043D\u044F \u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0441\u044F
-          \u0440\u0430\u0432\u043D\u043E\u0439 \u043F\u043E\u043B\u043E\u0432\u0438\u043D\u0435
-          \u0432\u0430\u0448\u0435\u0439 \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E\u0439
-          \u0431\u0440\u043E\u043D\u0438"
+        Description: Your armor becomes equal to half of your maximum armor.
     - rid: 2595387441571692690
       type: {class: TagHalfArmorEvent, ns: Game, asm: Assembly-CSharp}
       data: 

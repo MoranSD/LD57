@@ -76,6 +76,7 @@ namespace Game
         {
             G.State.PlayerState = new EntityState();
             G.State.PlayerState.SetModel(GameResources.CMS.PlayerModel.AsEntity());
+            PlayerHoleView.SetState(G.State.PlayerState);
             LoadGenerationInfo();
             StartCoroutine(MostFirstCutScene());
 
@@ -96,7 +97,7 @@ namespace Game
 #if UNITY_EDITOR
             if (Input.GetKeyDown(KeyCode.W))
             {
-
+                
             }
 #endif
         }
@@ -126,6 +127,7 @@ namespace Game
 
             target.Health = Mathf.Min(target.MaxHealth, target.Health + heal);
             target.View.UpdateHealth();
+            target.View.DrawHeal();
         }
         public IEnumerator ApplySelfStun(EntityState target, int stunCycles)
         {
@@ -138,7 +140,7 @@ namespace Game
         {
             target.StunCycles = stunCycles;
             target.CyclesAfterStun = 0;
-            Debug.Log("todo: stun effect");
+            target.View.SetStun(true);
             yield break;
         }
         public IEnumerator UseAbility(EntityState owner, AbilityState ability)
@@ -198,11 +200,13 @@ namespace Game
 
                 if (target.Health <= 0)
                 {
-                    target.View.DrawDie();
+                    yield return target.View.DrawDie();
                 }
             }
-
-            yield break;
+            else
+            {
+                yield return target.View.DrawApplyDamage();
+            }
         }
 
         private IEnumerator MostFirstCutScene()
@@ -276,11 +280,12 @@ namespace Game
         {
             G.State.Level++;
             var oldGrade = G.State.Grade;
-            G.State.Grade = Mathf.Min(G.State.Level / GradeCost, generationInfosMap.Count - 1);
+            G.State.Grade = G.State.Level / GradeCost;
 
             if(oldGrade != G.State.Grade)
             {
-
+                var randomThought = SubconsciousThoughts.GetRandomThought(G.State.Grade);
+                yield return G.CutScene.SayScenario(randomThought);
             }
 
             yield return EnterHoleSelectionScene();
@@ -494,6 +499,8 @@ namespace Game
                 yield break;
             }
 
+            yield return new WaitForSeconds(1);
+
             var inters = Interactor.FindAll<IOnTurnEnd>();
             foreach (var inter in inters)
                 yield return inter.OnTurnEnd(TurnTeam.Player);
@@ -614,7 +621,7 @@ namespace Game
             }
         }
 
-        private GenerationInfo GetCurrentGenInfo() => generationInfosMap[G.State.Grade];
+        private GenerationInfo GetCurrentGenInfo() => generationInfosMap[Mathf.Min(G.State.Grade, generationInfosMap.Count - 1)];
         private void LoadGenerationInfo()
         {
             generationInfosMap.Clear();

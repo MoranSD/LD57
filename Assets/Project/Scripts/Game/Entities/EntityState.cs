@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace Game
 {
-    [Serializable]
     public class EntityState
     {
         public CMSEntity Model;

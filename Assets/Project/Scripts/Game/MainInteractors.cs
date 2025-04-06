@@ -1,7 +1,25 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Game
 {
+    public static class MainInteractorsUtil
+    {
+        public static IEnumerator RemoveAllEvents(List<EventState> eventStates)
+        {
+            foreach (var eventState in eventStates)
+                G.State.ActiveEvents.Remove(eventState);
+
+            yield break;
+        }
+
+        public static IEnumerator RemoveEvent(EventState eventState)
+        {
+            G.State.ActiveEvents.Remove(eventState);
+            yield break;
+        }
+    }
     public enum TurnTeam
     {
         Player,
@@ -29,7 +47,7 @@ namespace Game
     {
         IEnumerator OnTurnEnd(TurnTeam team);
     }
-    public class FightTurnInteraction : BaseInteraction, IOnTurnEnd
+    public class FightTurnInteraction : BaseInteraction, IOnTurnEnd, IOnFightEnd
     {
         public override int Priority()
         {
@@ -68,6 +86,16 @@ namespace Game
 
             yield break;
         }
+
+        public IEnumerator OnFightEnd()
+        {
+            G.State.PlayerState.StunCycles = 0;
+            G.State.PlayerState.CyclesAfterStun = 0;
+            G.State.PlayerState.UsedAbilitiesCount = 0;
+            G.State.PlayerState.UsedItemsCount = 0;
+            G.State.ActiveEvents.Clear();
+            yield break;
+        }
     }
     public interface ICanUseAbilityFilter
     {
@@ -76,5 +104,25 @@ namespace Game
     public interface IOnUseAbility
     {
         public IEnumerator OnUseAbility(EntityState owner, AbilityState ability);
+    }
+    public interface IOnApplyHoleEvent
+    {
+        public IEnumerator OnApplyHoleEvent(HoleState holeState, EventState eventState);
+    }
+    public interface IOnApplyDamage
+    {
+        public IEnumerator OnApplyDamage(EntityState attacker, EntityState target, PropertyLink<float> damage);
+    }
+    public interface IOnFightBegin
+    {
+        public IEnumerator OnFightBegin();
+    }
+    public interface IOnFightEnd
+    {
+        public IEnumerator OnFightEnd();
+    }
+    public interface IOnBeforeEntityDie
+    {
+        public IEnumerator OnBeforeEntityDie(EntityState entity);
     }
 }

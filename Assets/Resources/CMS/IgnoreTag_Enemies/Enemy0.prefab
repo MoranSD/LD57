@@ -60,23 +60,23 @@ MonoBehaviour:
       type: {class: TagStartAbilities, ns: Game, asm: Assembly-CSharp}
       data:
         All:
-        - Id: /Abilities/Ability 6
+        - Id: /Abilities/Ability 0
     - rid: 2595387418287013979
       type: {class: TagStartArmor, ns: Common, asm: Assembly-CSharp}
       data:
-        Val: 1
+        Val: 0
     - rid: 2595387418287013980
       type: {class: TagStartHealth, ns: Common, asm: Assembly-CSharp}
       data:
-        Val: 2
+        Val: 4
     - rid: 2595387418287013981
       type: {class: TagMaxHealth, ns: Common, asm: Assembly-CSharp}
       data:
-        Val: 5
+        Val: 4
     - rid: 2595387418287013982
       type: {class: TagMaxArmor, ns: Common, asm: Assembly-CSharp}
       data:
-        Val: 1
+        Val: 0
     - rid: 2595387418287013983
       type: {class: TagMaxAbilities, ns: Game, asm: Assembly-CSharp}
       data:

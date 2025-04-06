@@ -2,13 +2,11 @@
 
 namespace Game
 {
-    public class AbilityState
+    public class EventState
     {
-        public bool HasModel => Model != null;
         public CMSEntity Model;
 
-        public bool IsActive => ActiveCycles > 0;
-        public int ActiveCycles;
+        public int ActiveCount;
 
         public void SetModel(CMSEntity model)
         {

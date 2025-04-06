@@ -94,10 +94,18 @@ namespace Game
         {
             var info = "";
 
+            if (view.State.HasEvent)
+            {
+                if (view.State.Event.Is<TagDescription>(out var ds))
+                    info += $"Event - {ds.Description}";
+            }
+
+            info += "\n\n";
+
             if (view.State.HasAbility)
             {
                 if (view.State.Ability.Is<TagDescription>(out var ds))
-                    info += ds.Description;
+                    info += $"Ability - {ds.Description}";
             }
 
             infoText.text = info;

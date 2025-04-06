@@ -27,6 +27,8 @@ namespace Game
         public HoleState LeftHoleInfo;
         public HoleState RightHoleInfo;
 
+        public List<EventState> ActiveEvents = new();
+
         public bool Fighting;
         public TurnTeam FightTurnTeam = TurnTeam.NoOne;
         public EntityState EnemyState;
@@ -45,6 +47,7 @@ namespace Game
         public GameObject HoleSelectionSceneParent;
         public HoleView LeftHole;
         public HoleView RightHole;
+        public EntityView PlayerHoleView;
         [Header("Fight")]
         public GameObject FightingSceneParent;
         public EntityView PlayerFightView;
@@ -158,24 +161,22 @@ namespace Game
         }
         public IEnumerator ApplyDamage(EntityState attacker, EntityState target, float damage, bool throughArmor = false)
         {
-            //var damageProperty = new PropertyLink<float>(damage);
+            var damageProperty = new PropertyLink<float>(damage);
 
-            //var inters = Interactor.FindAll<IOnEntityApplyDamage>();
-            //foreach (var inter in inters)
-            //    yield return inter.OnEntityApplyDamage(attacker, entity, damageProperty);
-
-            //damageProperty.Value
+            var inters = Interactor.FindAll<IOnApplyDamage>();
+            foreach (var inter in inters)
+                yield return inter.OnApplyDamage(attacker, target, damageProperty);
 
             if (target.Armor > 0 && !throughArmor)
             {
-                if(target.Armor >= damage)
+                if(target.Armor >= damageProperty.Value)
                 {
-                    target.Armor -= damage;
+                    target.Armor -= damageProperty.Value;
                     target.View.UpdateArmor();
                 }
                 else
                 {
-                    var remainingDamage = damage - target.Armor;
+                    var remainingDamage = damageProperty.Value - target.Armor;
                     target.Armor = 0;
                     target.Health -= remainingDamage;
                     target.View.UpdateArmor();
@@ -184,15 +185,15 @@ namespace Game
             }
             else
             {
-                target.Health -= damage;
+                target.Health -= damageProperty.Value;
                 target.View.UpdateHealth();
             }
 
             if (target.Health <= 0)
             {
-                //var inters2 = Interactor.FindAll<IOnBeforeEntityDie>();
-                //foreach (var inter in inters2)
-                //    yield return inter.OnBeforeEntityDie(entity);
+                var inters2 = Interactor.FindAll<IOnBeforeEntityDie>();
+                foreach (var inter in inters2)
+                    yield return inter.OnBeforeEntityDie(target);
 
                 if (target.Health <= 0)
                 {
@@ -226,13 +227,25 @@ namespace Game
         {
             yield return UnloadScene();
 
+            PlayerHoleView.SetState(G.State.PlayerState);
+
             for (int i = 0; i < 2; i++)
             {
                 var holeState = new HoleState();
 
                 var holeInfo = GetCurrentGenInfo().HoleInfo.Get<TagHoleGenerationInfo>();
+
                 var r = UnityEngine.Random.Range(0, 101);
+                var r2 = UnityEngine.Random.Range(0, 101);
+
                 bool shouldSetAbility = r != 0 && r <= holeInfo.HoleAbilityChance;
+                bool shouldSetEvent = r2 != 0 && r2 <= holeInfo.HoleEventChance;
+
+                if (!holeInfo.CanHaveBothThings && shouldSetAbility && shouldSetEvent)
+                {
+                    shouldSetAbility = r > r2;
+                    shouldSetEvent = r2 > r;
+                }
 
                 if (shouldSetAbility)
                 {
@@ -242,7 +255,15 @@ namespace Game
                     holeState.Ability = CMS.Get<CMSEntity>(randomAbilityId);
                 }
 
-                if(i == 0)
+                if (shouldSetEvent)
+                {
+                    var eventIds = holeInfo.EventLinks.Select(x => x.Id).ToList();
+                    eventIds.Shuffle();
+                    var randomEventId = eventIds[0];
+                    holeState.Event = CMS.Get<CMSEntity>(randomEventId);
+                }
+
+                if (i == 0)
                 {
                     G.State.LeftHoleInfo = holeState;
                     LeftHole.SetState(holeState);
@@ -268,6 +289,18 @@ namespace Game
         private IEnumerator EnterHoleProcess(HoleState holeState)
         {
             G.State.SelectingHole = false;
+
+            if (holeState.HasEvent)
+            {
+                var eventState = new EventState();
+                eventState.SetModel(holeState.Event);
+
+                G.State.ActiveEvents.Add(eventState);
+
+                var inters = Interactor.FindAll<IOnApplyHoleEvent>();
+                foreach (var inter in inters)
+                    yield return inter.OnApplyHoleEvent(holeState, eventState);
+            }
 
             if (holeState.HasAbility)
             {
@@ -333,6 +366,10 @@ namespace Game
             G.State.Fighting = true;
             FightingSceneParent.SetActive(true);
 
+            var inters = Interactor.FindAll<IOnFightBegin>();
+            foreach (var inter in inters)
+                yield return inter.OnFightBegin();
+
             yield return BeginFightCycle();
         }
         private IEnumerator BeginFightCycle()
@@ -368,6 +405,7 @@ namespace Game
         }
         private void OnSelectFightAbility(int id)
         {
+            Debug.Log($"Pressed ability {id}"); 
             if (G.State.FightTurnTeam != TurnTeam.Player) return;
             if (usingAbility) return;
             if (id < 0 || id >= G.State.PlayerState.Abilities.Length) return;
@@ -485,6 +523,10 @@ namespace Game
         }
         private IEnumerator EndFightLoop(int winStateId)
         {
+            var inters = Interactor.FindAll<IOnFightEnd>();
+            foreach (var inter in inters)
+                yield return inter.OnFightEnd();
+
             if (winStateId == 1)//win
             {
                 yield return EnterNextHoleSelectionScene();

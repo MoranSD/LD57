@@ -17,9 +17,12 @@ namespace Game
     public class TagHoleGenerationInfo : EntityComponentDefinition
     {
         [Range(0, 100)] public float HoleAbilityChance;
+        [Range(0, 100)] public float HoleEventChance;
+        public bool CanHaveBothThings;
         [Range(0, 100)] public float EnemyExistentChance;
 
         public List<EntityLink> AbilityLinks;
+        public List<EntityLink> EventLinks;
     }
     [Serializable]
     public class TagEnemyGenerationInfo : EntityComponentDefinition

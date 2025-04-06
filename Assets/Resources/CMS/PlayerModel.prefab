@@ -65,11 +65,11 @@ MonoBehaviour:
     - rid: 2595387418287013979
       type: {class: TagStartArmor, ns: Common, asm: Assembly-CSharp}
       data:
-        Val: 5
+        Val: 1
     - rid: 2595387418287013980
       type: {class: TagStartHealth, ns: Common, asm: Assembly-CSharp}
       data:
-        Val: 5
+        Val: 3
     - rid: 2595387418287013981
       type: {class: TagMaxHealth, ns: Common, asm: Assembly-CSharp}
       data:

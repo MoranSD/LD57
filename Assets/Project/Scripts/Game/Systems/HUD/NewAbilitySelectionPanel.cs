@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,8 @@ namespace Game
 {
     public class NewAbilitySelectionPanel : MonoBehaviour
     {
+        public event Action Opened;
+        public bool IsVisible { get; private set; }
         public int SelectedNewAbilitySlotId { get; private set; } = -1;
 
         [SerializeField] private GameObject panel;
@@ -39,29 +42,40 @@ namespace Game
 
         public IEnumerator ShowAbilityMoveToSlot(AbilityState abilityState, EntityState playerState, int slotId)
         {
+            IsVisible = true;
             panel.SetActive(true);
             PrepareEnvironment(abilityState, playerState);
+            Opened?.Invoke();
 
             selectingSlot = false;
             selectedSlotId = 0;
             yield return new WaitUntil(() => selectedSlotId == -1);
 
             yield return ShowAbilityMoveToSlot(slotId);
-            panel.SetActive(false);
+
+            yield return new WaitForSeconds(1f);
         }
         public IEnumerator SelectAbilitySlot(AbilityState abilityState, EntityState playerState)
         {
+            IsVisible = true;
             panel.SetActive(true);
             PrepareEnvironment(abilityState, playerState);
+            Opened?.Invoke();
 
             selectingSlot = true;
             selectedSlotId = -1;
             yield return new WaitWhile(() => selectedSlotId == -1);
             SelectedNewAbilitySlotId = selectedSlotId;
 
-            slots[selectedSlotId].SetEmptySlot();
+            slots[selectedSlotId].DestroySlot();
 
             yield return ShowAbilityMoveToSlot(selectedSlotId);
+
+            yield return new WaitForSeconds(1f);
+        }
+        public void HideMenu()
+        {
+            IsVisible = false;
             panel.SetActive(false);
         }
 
@@ -73,6 +87,8 @@ namespace Game
 
             slots[slotId].SetAbility(newAbilitySlot.State, true);
             newAbilitySlot.gameObject.SetActive(false);
+
+            yield return slots[slotId].LightShake();
         }
         private void PrepareEnvironment(AbilityState abilityState, EntityState playerState)
         {

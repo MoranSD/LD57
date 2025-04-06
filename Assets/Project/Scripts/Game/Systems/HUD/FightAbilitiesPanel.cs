@@ -16,6 +16,7 @@ namespace Game
             for (int i = 0; i < slots.Count; i++)
             {
                 slots[i].SlotId = i;
+                slots[i].AllowLightHighlightWhenPointer = true;
                 slots[i].OnClicked += OnClickOnSlot;
             }
         }

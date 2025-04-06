@@ -2,9 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Game
 {
@@ -16,6 +14,7 @@ namespace Game
         public static HUD HUD;
         public static Main Main;
         public static GameState State;
+        public static CutScene CutScene;
     }
     [Serializable]
     public class GameState
@@ -37,6 +36,8 @@ namespace Game
     }
     public class Main : MonoBehaviour
     {
+        public event Action OnChangeScene;
+
         [Header("Main")]
         public GameState State;
         public int GradeCost = 5;
@@ -76,7 +77,7 @@ namespace Game
             G.State.PlayerState = new EntityState();
             G.State.PlayerState.SetModel(GameResources.CMS.PlayerModel.AsEntity());
             LoadGenerationInfo();
-            StartCoroutine(EnterHoleSelectionScene());
+            StartCoroutine(MostFirstCutScene());
 
             G.HUD.EndTurnButton.onClick.AddListener(OnPressEndTurn);
             G.HUD.AbilitiesPanel.OnSelectAbility += OnSelectFightAbility;
@@ -204,6 +205,60 @@ namespace Game
             yield break;
         }
 
+        private IEnumerator MostFirstCutScene()
+        {
+            G.CutScene.SetBG(1);
+
+            yield return G.CutScene.SmartWait(3);
+
+            yield return G.CutScene.Say("Darkness.");
+
+            yield return G.CutScene.SmartWait(3);
+
+            yield return G.CutScene.Say("My whole body aches...");
+
+            yield return G.CutScene.SmartWait(2);
+
+            yield return G.CutScene.ContinueSay(" How did I get here?");
+
+            yield return G.CutScene.SmartWait(3);
+
+            yield return G.CutScene.Say("These staircases");
+
+            yield return G.CutScene.SmartWait(1.5f);
+
+            yield return G.CutScene.ContinueSay("—no good lies below.");
+
+            yield return G.CutScene.SmartWait(3);
+
+            yield return G.CutScene.Say("Smells like sorcery.");
+
+            yield return G.CutScene.SmartWait(4);
+
+            yield return G.CutScene.Say("Must choose");
+
+            yield return G.CutScene.SmartWait(2);
+
+            yield return G.CutScene.ContinueSay(".");
+
+            yield return G.CutScene.SmartWait(0.5f);
+
+            yield return G.CutScene.ContinueSay(".");
+
+            yield return G.CutScene.SmartWait(0.5f);
+
+            yield return G.CutScene.ContinueSay(".");
+
+            yield return G.CutScene.SmartWait(2);
+
+            yield return G.CutScene.Unsay();
+
+            yield return G.CutScene.SmartWait(2);
+
+            yield return EnterHoleSelectionScene();
+
+            G.CutScene.SetBG(0);
+        }
         private IEnumerator UnloadScene()
         {
             G.State.SelectingHole = false;
@@ -220,7 +275,14 @@ namespace Game
         private IEnumerator EnterNextHoleSelectionScene()
         {
             G.State.Level++;
+            var oldGrade = G.State.Grade;
             G.State.Grade = Mathf.Min(G.State.Level / GradeCost, generationInfosMap.Count - 1);
+
+            if(oldGrade != G.State.Grade)
+            {
+
+            }
+
             yield return EnterHoleSelectionScene();
         }
         private IEnumerator EnterHoleSelectionScene()
@@ -234,11 +296,13 @@ namespace Game
                 var holeState = new HoleState();
 
                 var holeInfo = GetCurrentGenInfo().HoleInfo.Get<TagHoleGenerationInfo>();
+                var playerActiveAbilityIds = G.State.PlayerState.Abilities.Where(x => x != null).Select(x => x.Model.id).ToList();
+                var abilityIds = holeInfo.AbilityLinks.Select(x => x.Id).Where(x => !playerActiveAbilityIds.Contains(x)).ToList();
 
                 var r = UnityEngine.Random.Range(0, 101);
                 var r2 = UnityEngine.Random.Range(0, 101);
 
-                bool shouldSetAbility = r != 0 && r <= holeInfo.HoleAbilityChance;
+                bool shouldSetAbility = abilityIds.Count > 0 && r != 0 && r <= holeInfo.HoleAbilityChance;
                 bool shouldSetEvent = r2 != 0 && r2 <= holeInfo.HoleEventChance;
 
                 if (!holeInfo.CanHaveBothThings && shouldSetAbility && shouldSetEvent)
@@ -249,7 +313,6 @@ namespace Game
 
                 if (shouldSetAbility)
                 {
-                    var abilityIds = holeInfo.AbilityLinks.Select(x => x.Id).ToList();
                     abilityIds.Shuffle();
                     var randomAbilityId = abilityIds[0];
                     holeState.Ability = CMS.Get<CMSEntity>(randomAbilityId);
@@ -277,8 +340,7 @@ namespace Game
 
             G.State.SelectingHole = true;
             HoleSelectionSceneParent.SetActive(true);
-
-            yield break;
+            OnChangeScene?.Invoke();
         }
         private void OnSelectHole(HoleState state)
         {
@@ -334,6 +396,11 @@ namespace Game
                 }
             }
 
+            yield return G.CutScene.DoFade(0, 1);
+            yield return new WaitForSeconds(2);
+
+            G.HUD.AbilitySelectionPanel.HideMenu();
+
             var holeInfo = GetCurrentGenInfo().HoleInfo.Get<TagHoleGenerationInfo>();
             var r = UnityEngine.Random.Range(0, 101);
             bool isEnemyExists = r != 0 && r <= holeInfo.EnemyExistentChance;
@@ -346,6 +413,8 @@ namespace Game
             {
                 yield return EnterNextHoleSelectionScene();
             }
+
+            yield return G.CutScene.DoFade(1, 0);
         }
 
         private IEnumerator EnterFightScene()
@@ -365,6 +434,7 @@ namespace Game
             G.State.FightTurnTeam = TurnTeam.NoOne;
             G.State.Fighting = true;
             FightingSceneParent.SetActive(true);
+            OnChangeScene?.Invoke();
 
             var inters = Interactor.FindAll<IOnFightBegin>();
             foreach (var inter in inters)
@@ -527,9 +597,13 @@ namespace Game
             foreach (var inter in inters)
                 yield return inter.OnFightEnd();
 
+            yield return G.CutScene.DoFade(0, 1);
+            yield return new WaitForSeconds(2);
+
             if (winStateId == 1)//win
             {
                 yield return EnterNextHoleSelectionScene();
+                yield return G.CutScene.DoFade(1, 0);
             }
             else if (winStateId == 0)//lose
             {

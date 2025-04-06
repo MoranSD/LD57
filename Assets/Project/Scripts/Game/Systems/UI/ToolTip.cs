@@ -17,6 +17,8 @@ namespace Game
         [SerializeField] private RectTransform infoRect;
         [SerializeField] private TextMeshProUGUI infoText;
 
+        private bool isShowingHoleInfo;
+
         private void Update()
         {
             if (!ShowInfo) return;
@@ -56,6 +58,8 @@ namespace Game
             G.HUD.OnPointerExitHole += OnPointerExitHole;
             G.HUD.OnPointerEnterAbilitySlot += OnPointerEnterAbilitySlot;
             G.HUD.OnPointerExitAbilitySlot += OnPointerExitAbilitySlot;
+            G.HUD.AbilitySelectionPanel.Opened += OnOpenAbilitySelection;
+            G.Main.OnChangeScene += OnChangeScene;
         }
 
         private void OnDestroy()
@@ -64,6 +68,22 @@ namespace Game
             G.HUD.OnPointerExitHole -= OnPointerExitHole;
             G.HUD.OnPointerEnterAbilitySlot -= OnPointerEnterAbilitySlot;
             G.HUD.OnPointerExitAbilitySlot -= OnPointerExitAbilitySlot;
+            G.HUD.AbilitySelectionPanel.Opened -= OnOpenAbilitySelection;
+            G.Main.OnChangeScene -= OnChangeScene;
+        }
+
+        private void OnChangeScene()
+        {
+            isShowingHoleInfo = false;
+            infoText.text = "";
+        }
+
+        private void OnOpenAbilitySelection()
+        {
+            if (isShowingHoleInfo == false) return;
+
+            isShowingHoleInfo = false;
+            infoText.text = "";
         }
 
         private void OnPointerExitAbilitySlot(AbilitySlot slot)
@@ -75,7 +95,7 @@ namespace Game
         {
             if (slot.HasState == false) return;
 
-            if(slot.State.Model == null)
+            if (slot.State.Model == null)
             {
                 Debug.LogError("Такого быть не должно!");
                 return;
@@ -87,11 +107,18 @@ namespace Game
 
         private void OnPointerExitHole(HoleView view)
         {
+            if (G.HUD.AbilitySelectionPanel.IsVisible) return;
+            if (isShowingHoleInfo == false) return;
+
+            isShowingHoleInfo = false;
             infoText.text = "";
         }
 
         private void OnPointerEnterHole(HoleView view)
         {
+            if (G.HUD.AbilitySelectionPanel.IsVisible) return;
+
+            isShowingHoleInfo = true;
             var info = "";
 
             if (view.State.HasEvent)

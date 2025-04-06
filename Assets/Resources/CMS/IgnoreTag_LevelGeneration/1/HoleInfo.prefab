@@ -55,6 +55,9 @@ MonoBehaviour:
       type: {class: TagHoleGenerationInfo, ns: Game, asm: Assembly-CSharp}
       data:
         HoleAbilityChance: 100
+        HoleEventChance: 0
+        CanHaveBothThings: 0
         EnemyExistentChance: 100
         AbilityLinks:
-        - Id: /Abilities/Ability 1
+        - Id: /IgnoreTag_Abilities/Ability 0
+        EventLinks: []

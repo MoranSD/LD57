@@ -55,10 +55,10 @@ MonoBehaviour:
     - rid: 2595387418287013991
       type: {class: TagDescription, ns: Common, asm: Assembly-CSharp}
       data:
-        Description: Increases damage by 1 throughout the battle
+        Description: Increases damage by 2 throughout the battle
     - rid: 2595387441571692639
       type: {class: TagChangeDamageEvent, ns: Game, asm: Assembly-CSharp}
       data:
-        Damage: 1
+        Damage: 2
         Increase: 1
         ToPlayer: 1

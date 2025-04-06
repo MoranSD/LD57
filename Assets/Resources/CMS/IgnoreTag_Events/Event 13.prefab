@@ -55,10 +55,10 @@ MonoBehaviour:
     - rid: 2595387418287013991
       type: {class: TagDescription, ns: Common, asm: Assembly-CSharp}
       data:
-        Description: Increases health by 1 (will not rise above the maximum)
+        Description: Increases health by 3 (will not rise above the maximum)
     - rid: 2595387441571692677
       type: {class: TagHealChangeEvent, ns: Game, asm: Assembly-CSharp}
       data:
-        Health: 1
+        Health: 3
         MinHealth: 1
         Increase: 1

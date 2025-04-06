@@ -55,8 +55,8 @@ MonoBehaviour:
     - rid: 2595387418287013990
       type: {class: TagIncreaseArmorAbility, ns: Game, asm: Assembly-CSharp}
       data:
-        Armor: 1
+        Armor: 2
     - rid: 2595387418287013992
       type: {class: TagDescription, ns: Common, asm: Assembly-CSharp}
       data:
-        Description: Restores armor by 1 unit
+        Description: Restores armor by 2 unit

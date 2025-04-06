@@ -55,8 +55,8 @@ MonoBehaviour:
     - rid: 2595387418287013991
       type: {class: TagDescription, ns: Common, asm: Assembly-CSharp}
       data:
-        Description: Deals 3 damage point ignoring armor
+        Description: Deals 4 damage point ignoring armor
     - rid: 2595387426484256850
       type: {class: TagApplyDamageThroughArmorAbility, ns: Game, asm: Assembly-CSharp}
       data:
-        Damage: 3
+        Damage: 4

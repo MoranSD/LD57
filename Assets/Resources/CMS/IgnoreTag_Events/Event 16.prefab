@@ -55,10 +55,10 @@ MonoBehaviour:
     - rid: 2595387418287013991
       type: {class: TagDescription, ns: Common, asm: Assembly-CSharp}
       data:
-        Description: Reduces armor by 1 (will not drop below 1 hp)
+        Description: Reduces armor by 3 (will not drop below 1 hp)
     - rid: 2595387441571692683
       type: {class: TagArmorChangeEvent, ns: Game, asm: Assembly-CSharp}
       data:
-        Armor: 1
+        Armor: 3
         MinArmor: 1
         Increase: 0

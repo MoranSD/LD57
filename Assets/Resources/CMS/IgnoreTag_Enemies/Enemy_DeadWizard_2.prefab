@@ -63,6 +63,7 @@ MonoBehaviour:
         All:
         - Id: /IgnoreTag_Abilities/Ability_ApplyStun_1_4
         - Id: /IgnoreTag_Abilities/Ability_ApplyDamage_2
+        - Id: /IgnoreTag_Abilities/Ability_IncreaseArmor_2
     - rid: 2595387418287013979
       type: {class: TagStartArmor, ns: Common, asm: Assembly-CSharp}
       data:
@@ -82,7 +83,7 @@ MonoBehaviour:
     - rid: 2595387418287013983
       type: {class: TagMaxAbilities, ns: Game, asm: Assembly-CSharp}
       data:
-        count: 2
+        count: 3
     - rid: 2595387441571692819
       type: {class: TagSprite, ns: Common, asm: Assembly-CSharp}
       data:

@@ -55,9 +55,9 @@ MonoBehaviour:
     - rid: 2595387418287013991
       type: {class: TagDescription, ns: Common, asm: Assembly-CSharp}
       data:
-        Description: Removes 25% of the armor relative to the maximum
+        Description: Removes 30% of the armor relative to the maximum
     - rid: 2595387426484256868
       type: {class: TagRemovePerscentArmorAbility, ns: Game, asm: Assembly-CSharp}
       data:
-        RemovePerscent: 25
+        RemovePerscent: 30
         FromMax: 1

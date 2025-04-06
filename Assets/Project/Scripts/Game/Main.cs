@@ -263,6 +263,27 @@ namespace Game
 
             G.CutScene.SetBG(0);
         }
+        private IEnumerator RestoreGame()
+        {
+            yield return G.CutScene.Say("Huh...");
+            yield return G.CutScene.SmartWait(2);
+            yield return G.CutScene.Say("Am i...");
+            yield return G.CutScene.SmartWait(2);
+            yield return G.CutScene.Say("Still alive...");
+            yield return G.CutScene.SmartWait(3);
+            yield return G.CutScene.Unsay("Still alive...");
+            yield return G.CutScene.SmartWait(1);
+
+            G.State = new();
+            State = G.State;
+            G.State.PlayerState = new EntityState();
+            G.State.PlayerState.SetModel(GameResources.CMS.PlayerModel.AsEntity());
+            PlayerHoleView.SetState(G.State.PlayerState);
+
+            yield return EnterHoleSelectionScene();
+
+            G.CutScene.SetBG(0);
+        }
         private IEnumerator UnloadScene()
         {
             G.State.SelectingHole = false;
@@ -416,6 +437,7 @@ namespace Game
             }
             else
             {
+                G.State.ActiveEvents.Clear();
                 yield return EnterNextHoleSelectionScene();
             }
 
@@ -616,8 +638,9 @@ namespace Game
             {
                 G.State.FightTurnTeam = TurnTeam.NoOne;
                 G.State.Fighting = false;
+                G.State.EnemyState = null;
                 G.HUD.DisableHud();
-                G.UI.ShowLose();
+                yield return RestoreGame();
             }
         }
 

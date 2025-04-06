@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1284060230688678603}
   - component: {fileID: 518076679880797475}
   m_Layer: 0
-  m_Name: Enemy_Dead_3
+  m_Name: Enemy_Dead_3 0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -61,7 +61,7 @@ MonoBehaviour:
       type: {class: TagStartAbilities, ns: Game, asm: Assembly-CSharp}
       data:
         All:
-        - Id: /IgnoreTag_Abilities/Ability_ApplyDamage_2
+        - Id: /IgnoreTag_Abilities/Ability_ApplyDamage_4
     - rid: 2595387418287013979
       type: {class: TagStartArmor, ns: Common, asm: Assembly-CSharp}
       data:

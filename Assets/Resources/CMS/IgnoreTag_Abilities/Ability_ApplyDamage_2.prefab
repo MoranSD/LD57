@@ -55,7 +55,7 @@ MonoBehaviour:
     - rid: 2595387418287013989
       type: {class: TagApplyDamageAbility, ns: Game, asm: Assembly-CSharp}
       data:
-        Damage: 1
+        Damage: 2
     - rid: 2595387418287013991
       type: {class: TagDescription, ns: Common, asm: Assembly-CSharp}
       data:

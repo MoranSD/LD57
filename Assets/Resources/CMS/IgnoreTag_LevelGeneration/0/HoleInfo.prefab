@@ -54,13 +54,15 @@ MonoBehaviour:
     - rid: 2595387422742937677
       type: {class: TagHoleGenerationInfo, ns: Game, asm: Assembly-CSharp}
       data:
-        HoleAbilityChance: 7.4
+        HoleAbilityChance: 41.6
         HoleEventChance: 90.9
         CanHaveBothThings: 1
         EnemyExistentChance: 65
         AbilityLinks:
         - Id: /IgnoreTag_Abilities/Ability_ApplyDamageThroughShield_1
         - Id: /IgnoreTag_Abilities/Ability_RemovePerscentArmor_25
+        - Id: /IgnoreTag_Abilities/Ability_RemovePerscentArmor_50
+        - Id: /IgnoreTag_Abilities/Ability_ApplyDamage_3
         EventLinks:
         - Id: /IgnoreTag_Events/Event 2
         - Id: /IgnoreTag_Events/Event 4

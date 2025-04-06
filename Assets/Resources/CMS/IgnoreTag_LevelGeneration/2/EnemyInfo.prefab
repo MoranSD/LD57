@@ -55,5 +55,20 @@ MonoBehaviour:
       type: {class: TagEnemyGenerationInfo, ns: Game, asm: Assembly-CSharp}
       data:
         EntityLinks:
-        - Id: /IgnoreTag_Enemies/Enemy_Dead_3
+        - Id: /IgnoreTag_Enemies/Enemy_Dead_3 1
+        - Id: /IgnoreTag_Enemies/Enemy_Dead_3 1
+        - Id: /IgnoreTag_Enemies/Enemy_Dead_3 1
+        - Id: /IgnoreTag_Enemies/Enemy_Dead_3 1
+        - Id: /IgnoreTag_Enemies/Enemy_Dead_3 0
+        - Id: /IgnoreTag_Enemies/Enemy_Dead_3 0
+        - Id: /IgnoreTag_Enemies/Enemy_Dead_3 0
+        - Id: /IgnoreTag_Abilities/Ability_ApplyBleeding_3_2
+        - Id: /IgnoreTag_Abilities/Ability_ApplyBleeding_3_2
+        - Id: /IgnoreTag_Abilities/Ability_ApplyBleeding_3_2
+        - Id: /IgnoreTag_Abilities/Ability_ApplyBleeding_3_2
+        - Id: /IgnoreTag_Abilities/Ability_ApplyBleeding_3_2
+        - Id: /IgnoreTag_Abilities/Ability_ApplyBleeding_3_2
+        - Id: /IgnoreTag_Enemies/Enemy_DeadWizard_1
+        - Id: /IgnoreTag_Enemies/Enemy_DeadWizard_1
+        - Id: /IgnoreTag_Enemies/Enemy_DeadWizard_1
         - Id: /IgnoreTag_Enemies/Enemy_DeadWizard_1

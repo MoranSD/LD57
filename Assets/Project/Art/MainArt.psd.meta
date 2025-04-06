@@ -167,8 +167,8 @@ TextureImporter:
         y: 1923
         width: 25
         height: 38
-      alignment: 9
-      pivot: {x: 0.2904651, y: 0.3942068}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -185,10 +185,10 @@ TextureImporter:
       name: MainArt_3
       rect:
         serializedVersion: 2
-        x: 60
-        y: 1800
-        width: 73
-        height: 67
+        x: 311
+        y: 1905
+        width: 12
+        height: 36
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -207,6 +207,248 @@ TextureImporter:
       name: MainArt_4
       rect:
         serializedVersion: 2
+        x: 347
+        y: 1912
+        width: 67
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43d9071364a960b4e87a12e6f0cd8bf0
+      internalID: 316102763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MainArt_5
+      rect:
+        serializedVersion: 2
+        x: 427
+        y: 1912
+        width: 56
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 602ff92f939ab4849be52fe611fe40fe
+      internalID: 605232795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MainArt_6
+      rect:
+        serializedVersion: 2
+        x: 504
+        y: 1919
+        width: 25
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 584e2983a0c8f4f468cfad5607761982
+      internalID: 277041861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MainArt_7
+      rect:
+        serializedVersion: 2
+        x: 532
+        y: 1919
+        width: 25
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aaa41c926b66b2443acbba801e1499a5
+      internalID: -2060752614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MainArt_8
+      rect:
+        serializedVersion: 2
+        x: 559
+        y: 1919
+        width: 25
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9b9dacf236d44c439c1e44784faf1cc
+      internalID: -1997177853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MainArt_9
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 1900
+        width: 50
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61c42ee13918e7a489d121142cd631c3
+      internalID: -1407076801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MainArt_10
+      rect:
+        serializedVersion: 2
+        x: 684
+        y: 1912
+        width: 50
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4a6a58e5c21a654eaaebb97afd2f569
+      internalID: 649234246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MainArt_11
+      rect:
+        serializedVersion: 2
+        x: 755
+        y: 1882
+        width: 137
+        height: 110
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a108a72be899654c88709f8290236fc
+      internalID: 1102193904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MainArt_12
+      rect:
+        serializedVersion: 2
+        x: 936
+        y: 1899
+        width: 83
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eaf1e970fd603b1409fd649fe734d573
+      internalID: 597504991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MainArt_13
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 1800
+        width: 73
+        height: 67
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa642a5780d9b9940bd5897f539ba177
+      internalID: -1975509793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MainArt_14
+      rect:
+        serializedVersion: 2
+        x: 499
+        y: 1866
+        width: 41
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f49cc0ee7b15da143bb8cca5b67eecec
+      internalID: 175922112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MainArt_15
+      rect:
+        serializedVersion: 2
         x: 153
         y: 1810
         width: 56
@@ -219,8 +461,96 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 43d9071364a960b4e87a12e6f0cd8bf0
-      internalID: 316102763
+      spriteID: fafb0c43d299277479d6ccfaadcbb1a9
+      internalID: -525634377
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MainArt_16
+      rect:
+        serializedVersion: 2
+        x: 651
+        y: 1801
+        width: 21
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7a3b2cb79eaed945ad0f89daf491e4a
+      internalID: -1515274558
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MainArt_17
+      rect:
+        serializedVersion: 2
+        x: 569
+        y: 1813
+        width: 57
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40af1f3dd4b286d4f85b1fd1de8d9a06
+      internalID: -978467633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MainArt_18
+      rect:
+        serializedVersion: 2
+        x: 569
+        y: 1784
+        width: 57
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3aa274a53567853418a192b97445bd58
+      internalID: -758380922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MainArt_19
+      rect:
+        serializedVersion: 2
+        x: 569
+        y: 1755
+        width: 57
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0dbe39d1ae5d836419cb9930b543ca3a
+      internalID: 1868312988
       vertices: []
       indices: 
       edges: []
@@ -241,9 +571,24 @@ TextureImporter:
     nameFileIdTable:
       MainArt_0: -6301654893818102889
       MainArt_1: -5420912721756347148
+      MainArt_10: 649234246
+      MainArt_11: 1102193904
+      MainArt_12: 597504991
+      MainArt_13: -1975509793
+      MainArt_14: 175922112
+      MainArt_15: -525634377
+      MainArt_16: -1515274558
+      MainArt_17: -978467633
+      MainArt_18: -758380922
+      MainArt_19: 1868312988
       MainArt_2: -574654996
       MainArt_3: 336788931
       MainArt_4: 316102763
+      MainArt_5: 605232795
+      MainArt_6: 277041861
+      MainArt_7: -2060752614
+      MainArt_8: -1997177853
+      MainArt_9: -1407076801
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

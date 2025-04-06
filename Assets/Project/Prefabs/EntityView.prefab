@@ -177,9 +177,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5265191680454488142}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.22, y: 0.97, z: 0}
-  m_LocalScale: {x: 4.2615, y: 4.2615, z: 4.2615}
+  m_LocalScale: {x: 4.6593, y: 4.6593, z: 4.6593}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 502836378822312309}
@@ -230,7 +230,7 @@ SpriteRenderer:
   m_SortingLayerID: -1651474065
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: -574654996, guid: 866e653e50e30c2418369ffdfcaaed26, type: 3}
+  m_Sprite: {fileID: 277041861, guid: 866e653e50e30c2418369ffdfcaaed26, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -253,16 +253,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a84f56ea0d967646b19b3636ebcaead, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  State:
-    View: {fileID: 0}
-    MaxHealth: 0
-    Health: 0
-    MaxArmor: 0
-    Armor: 0
-    UsedAbilitiesCount: 0
-    UsedItemsCount: 0
-    MaxAbilitiesCount: 1
-    Abilities: []
   healthBarPivot: {fileID: 2552499166341805204}
   armorBarPivot: {fileID: 4619221994683599481}
   armorBarParent: {fileID: 7551405631531704962}
@@ -583,7 +573,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.7924528, g: 0.16820934, b: 0.16820934, a: 1}
+  m_Color: {r: 0.6226415, g: 0.50809896, b: 0.50809896, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
